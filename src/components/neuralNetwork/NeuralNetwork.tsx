@@ -671,7 +671,7 @@ const NeuralNetwork: React.FC<NeuralNetworkProps> = ({ projects, onNodeClick }) 
                         }
                     });
 
-                    // Mouse interaction - attract or repel based on distance
+                    // Mouse interaction - gentle attraction to make nodes more accessible
                     if (mousePos) {
                         const dx = node.x - mousePos.x;
                         const dy = node.y - mousePos.y;
@@ -679,22 +679,24 @@ const NeuralNetwork: React.FC<NeuralNetworkProps> = ({ projects, onNodeClick }) 
 
                         if (dist < 200) {
                             // Close to mouse - interactive forces
-                            const interactionForce = 0.03 * (1 - dist / 200) * deltaMult;
+                            const interactionForce = 0.01 * (1 - dist / 200) * deltaMult;
 
-                            if (dist > 50) {
-                                // Attraction when not too close
-                                node.vx -= dx * interactionForce * 0.5;
-                                node.vy -= dy * interactionForce * 0.5;
-                            } else {
-                                // Repulsion when very close
-                                node.vx += dx * interactionForce * 2;
-                                node.vy += dy * interactionForce * 2;
-                            }
+                            // Gentle attraction that increases as mouse gets closer
+                            // This makes nodes easier to click while maintaining overall structure
+                            node.vx -= dx * interactionForce;
+                            node.vy -= dy * interactionForce;
 
                             // Nodes get slightly activated by mouse proximity
-                            if (dist < 100) {
-                                node.activationLevel = Math.min(0.3, node.activationLevel +
-                                    (0.01 * (1 - dist / 100)) * deltaMult);
+                            if (dist < 120) {
+                                // Higher activation when closer to mouse
+                                node.activationLevel = Math.min(0.4, node.activationLevel +
+                                    (0.015 * (1 - dist / 120)) * deltaMult);
+
+                                // Slightly increase size when mouse is near to improve clickability
+                                if (dist < 80) {
+                                    const sizeFactor = 1 + 0.2 * (1 - dist / 80);
+                                    node.radius = node.baseRadius * sizeFactor;
+                                }
                             }
                         }
                     }
@@ -723,33 +725,33 @@ const NeuralNetwork: React.FC<NeuralNetworkProps> = ({ projects, onNodeClick }) 
                     if (Math.abs(node.vy) > adjustedMaxVel) node.vy = Math.sign(node.vy) * adjustedMaxVel;
                 }
 
-                // Maintain circular formation around hub with oscillations
+                // Maintain circular formation around hub with gentle oscillations
                 const hubNode = updatedNodes[0];
                 const dx = node.x - hubNode.x;
                 const dy = node.y - hubNode.y;
                 const distFromHub = Math.sqrt(dx * dx + dy * dy);
 
-                // Desired distance from hub with time-based oscillation
+                // Desired distance from hub with subtle time-based oscillation
                 const minDimension = Math.min(canvas.width, canvas.height);
-                // Each node oscillates at a slightly different frequency
-                const oscillationFactor = 1 + Math.sin(now * 0.0002 + index * 0.5) * 0.15;
+                // Each node oscillates at a slightly different frequency but with reduced amplitude
+                const oscillationFactor = 1 + Math.sin(now * 0.0002 + index * 0.5) * 0.08; // Reduced oscillation
                 const idealDist = minDimension * 0.3 * oscillationFactor;
 
-                // Strong force to maintain ideal distance from hub
+                // Strong force to maintain ideal distance from hub - keeps layout organized for recruiters
                 const distForceFactor = 0.01 * deltaMult;
-                if (distFromHub > idealDist * 1.2) {
+                if (distFromHub > idealDist * 1.15) { // Tighter bounds
                     // Too far - pull in (stronger force when too far)
-                    node.vx -= dx * distForceFactor * 1.5;
-                    node.vy -= dy * distForceFactor * 1.5;
-                } else if (distFromHub < idealDist * 0.8) {
+                    node.vx -= dx * distForceFactor * 1.8; // Stronger centering force
+                    node.vy -= dy * distForceFactor * 1.8;
+                } else if (distFromHub < idealDist * 0.85) { // Tighter bounds
                     // Too close - push out (stronger force when too close)
-                    node.vx += dx * distForceFactor * 1.5;
-                    node.vy += dy * distForceFactor * 1.5;
+                    node.vx += dx * distForceFactor * 1.8;
+                    node.vy += dy * distForceFactor * 1.8;
                 } else if (distFromHub > idealDist * 1.05 || distFromHub < idealDist * 0.95) {
                     // Minor adjustment when slightly off
                     const adjustFactor = distFromHub > idealDist ? -1 : 1;
-                    node.vx += dx * distForceFactor * 0.5 * adjustFactor;
-                    node.vy += dy * distForceFactor * 0.5 * adjustFactor;
+                    node.vx += dx * distForceFactor * 0.7 * adjustFactor;
+                    node.vy += dy * distForceFactor * 0.7 * adjustFactor;
                 }
 
                 // Keep nodes well away from screen edges
@@ -1366,7 +1368,7 @@ const NeuralNetwork: React.FC<NeuralNetworkProps> = ({ projects, onNodeClick }) 
         };
     }, [nodes, connections, hoveredNode, networkActivity, networkEvents]);
 
-    // Handle mouse interaction - now activates neurons directly
+    // Handle mouse interaction - with clear visual feedback for usability
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -1380,17 +1382,23 @@ const NeuralNetwork: React.FC<NeuralNetworkProps> = ({ projects, onNodeClick }) 
             let found = false;
             for (const node of nodes) {
                 const dist = Math.sqrt((node.x - x) ** 2 + (node.y - y) ** 2);
-                if (dist <= node.radius + 15) {
+                // More generous hit area to make nodes easier to click
+                const hitRadius = node.radius * 1.2 + 15;
+
+                if (dist <= hitRadius) {
                     setHoveredNode(node);
                     canvas.style.cursor = 'pointer';
                     found = true;
 
-                    // Hovering slightly stimulates the neuron
-                    if (node.activationLevel < 0.2) {
+                    // Hovering clearly activates the neuron - stronger effect for better feedback
+                    if (node.activationLevel < 0.4) {
                         const updatedNodes = [...nodes];
                         const hoveredNode = updatedNodes.find(n => n.id === node.id);
                         if (hoveredNode) {
-                            hoveredNode.activationLevel = Math.min(0.2, hoveredNode.activationLevel + 0.01);
+                            // More aggressive activation for clearer hover state
+                            hoveredNode.activationLevel = Math.min(0.6, hoveredNode.activationLevel + 0.03);
+                            // Make node slightly larger on hover for better clickability
+                            hoveredNode.radius = hoveredNode.baseRadius * 1.15;
                             setNodes(updatedNodes);
                         }
                     }
