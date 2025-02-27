@@ -1,4 +1,4 @@
-/* Update for NeuralNetwork.css */
+/* NeuralNetwork.css */
 .neural-network-container {
     position: relative;
     width: 100%;
@@ -164,4 +164,111 @@
     box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.7);
     z-index: 3;
     pointer-events: none;
+}
+
+/* Simulation Metrics Panel */
+.simulation-metrics {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: rgba(10, 10, 18, 0.85);
+    border: 1px solid var(--border-color, #3b4a6b);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    color: var(--text-light, #d0c8c0);
+    z-index: 100;
+    max-width: 300px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 5px rgba(0, 255, 170, 0.2);
+    backdrop-filter: blur(3px);
+}
+
+.metrics-header {
+    font-size: 0.8rem;
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border-color, #3b4a6b);
+    color: var(--primary-color, #c8b8a0);
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.metrics-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.metric-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    line-height: 1.2;
+}
+
+.metric-label {
+    color: var(--text-dark, #908878);
+    margin-right: 8px;
+}
+
+.metric-value {
+    color: var(--text-light, #d0c8c0);
+    font-weight: bold;
+}
+
+/* Pulse animation for metrics that are changing */
+@keyframes value-pulse {
+    0% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.7;
+    }
+}
+
+.metric-value {
+    animation: value-pulse 2s infinite;
+}
+
+/* State colors */
+.state-wave {
+    color: #00ccff;
+}
+
+.state-burst {
+    color: #ffaa00;
+}
+
+.state-storm {
+    color: #ff5500;
+}
+
+.state-seizure {
+    color: #ff0066;
+}
+
+.state-colorshift {
+    color: #aa00ff;
+}
+
+.state-stable {
+    color: #00ffaa;
+}
+
+/* Mood colors */
+.mood-calm {
+    color: #00ffaa;
+}
+
+.mood-excited {
+    color: #ffcc00;
+}
+
+.mood-erratic {
+    color: #ff5500;
 }

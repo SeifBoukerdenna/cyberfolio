@@ -1511,12 +1511,91 @@ const NeuralNetwork: React.FC<NeuralNetworkProps> = ({ projects, onNodeClick }) 
         };
     }, [nodes, connections, hoveredNode, onNodeClick]);
 
+    // Calculate simulation metrics for display
+    const getNetworkMetrics = () => {
+        // Count active neurons (above threshold)
+        const activeNeurons = nodes.filter(n => n.activationLevel > 0.2).length;
+
+        // Count total active pulses
+        const totalPulses = connections.reduce((sum, c) => sum + c.pulsePositions.length, 0);
+
+        // Calculate average connection health
+        const avgHealth = connections.length > 0 ?
+            Math.round(connections.reduce((sum, c) => sum + c.health, 0) / connections.length * 100) : 0;
+
+        // Count nodes by mood
+        const moodCounts = {
+            calm: nodes.filter(n => n.mood === 'calm').length,
+            excited: nodes.filter(n => n.mood === 'excited').length,
+            erratic: nodes.filter(n => n.mood === 'erratic').length
+        };
+
+        // Find dominant mood
+        let dominantMood = 'calm';
+        if (moodCounts.excited > moodCounts.calm && moodCounts.excited > moodCounts.erratic) {
+            dominantMood = 'excited';
+        } else if (moodCounts.erratic > moodCounts.calm && moodCounts.erratic > moodCounts.excited) {
+            dominantMood = 'erratic';
+        }
+
+        // Get current event if any
+        const currentEvent = networkEvents.length > 0 ?
+            networkEvents[0].type.toUpperCase() : "STABLE";
+
+        return {
+            activity: Math.round(networkActivity * 100),
+            activeNeurons,
+            totalNodes: nodes.length,
+            totalPulses,
+            avgHealth,
+            dominantMood: dominantMood.toUpperCase(),
+            currentEvent
+        };
+    };
+
+    const metrics = getNetworkMetrics();
+
     return (
         <div ref={containerRef} className="neural-network-container">
             <canvas ref={canvasRef} className="neural-network-canvas" />
             <div className="network-overlay">
                 <div className="scanner-line"></div>
                 <div className="grid-lines"></div>
+            </div>
+
+            {/* Simulation metrics display */}
+            <div className="simulation-metrics">
+                <div className="metrics-header">NEURAL NETWORK DIAGNOSTICS</div>
+                <div className="metrics-container">
+                    <div className="metric-item">
+                        <span className="metric-label">NETWORK ACTIVITY:</span>
+                        <span className="metric-value">{metrics.activity}%</span>
+                    </div>
+                    <div className="metric-item">
+                        <span className="metric-label">ACTIVE NEURONS:</span>
+                        <span className="metric-value">{metrics.activeNeurons}/{metrics.totalNodes}</span>
+                    </div>
+                    <div className="metric-item">
+                        <span className="metric-label">SIGNAL PULSES:</span>
+                        <span className="metric-value">{metrics.totalPulses}</span>
+                    </div>
+                    <div className="metric-item">
+                        <span className="metric-label">SYNAPSE HEALTH:</span>
+                        <span className="metric-value">{metrics.avgHealth}%</span>
+                    </div>
+                    <div className="metric-item">
+                        <span className="metric-label">NETWORK STATE:</span>
+                        <span className={`metric-value state-${metrics.currentEvent.toLowerCase()}`}>
+                            {metrics.currentEvent}
+                        </span>
+                    </div>
+                    <div className="metric-item">
+                        <span className="metric-label">DOMINANT MOOD:</span>
+                        <span className={`metric-value mood-${metrics.dominantMood.toLowerCase()}`}>
+                            {metrics.dominantMood}
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     );
