@@ -1,14 +1,14 @@
 :root {
-  --primary-color: #00ffaa;
-  --primary-dark: #00cc88;
-  --secondary-color: #7b68ee;
-  --accent-color: #ff00ff;
-  --background-dark: #0a0a12;
-  --background-light: #151828;
-  --text-light: #e0e0e0;
-  --text-dark: #8a8a8a;
-  --border-color: #3b4a6b;
-  --shadow-glow: 0 0 15px rgba(0, 255, 170, 0.3);
+  --primary-color: #c8b8a0;
+  --primary-dark: #a69684;
+  --secondary-color: #908878;
+  --accent-color: #d2bea8;
+  --background-dark: #08080d;
+  --background-light: #12121a;
+  --text-light: #d0c8c0;
+  --text-dark: #908878;
+  --border-color: #3a3642;
+  --shadow-glow: 0 0 15px rgba(180, 160, 140, 0.2);
 }
 
 * {
@@ -33,7 +33,7 @@ body {
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: #0a0a12;
+  background-color: var(--background-dark);
 }
 
 #root {
@@ -56,7 +56,8 @@ body {
   background-size: 100% 4px;
   z-index: 10;
   pointer-events: none;
-  opacity: 0.15;
+  opacity: 0.08;
+  /* More subtle for biological feel */
 }
 
 .vignette {
@@ -65,7 +66,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.7);
+  box-shadow: inset 0 0 180px rgba(0, 0, 0, 0.8);
   z-index: 5;
   pointer-events: none;
 }
@@ -109,7 +110,7 @@ body {
   font-weight: bold;
 }
 
-/* Animation for connected status */
+/* Animation for connected status - more like neural pulse */
 .info-item .value {
   position: relative;
 }
@@ -122,20 +123,26 @@ body {
   background-color: var(--primary-color);
   border-radius: 50%;
   margin-left: 8px;
-  animation: pulse 2s infinite;
+  animation: neural-pulse 3s infinite;
 }
 
-@keyframes pulse {
+@keyframes neural-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(0, 255, 170, 0.7);
+    box-shadow: 0 0 0 0 rgba(200, 184, 160, 0.7);
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
   }
 
   70% {
-    box-shadow: 0 0 0 6px rgba(0, 255, 170, 0);
+    box-shadow: 0 0 0 6px rgba(200, 184, 160, 0);
   }
 
   100% {
-    box-shadow: 0 0 0 0 rgba(0, 255, 170, 0);
+    box-shadow: 0 0 0 0 rgba(200, 184, 160, 0);
+    opacity: 1;
   }
 }
 
@@ -144,24 +151,24 @@ body {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: rgba(16, 20, 30, 0.95);
-  border: 1px solid #3b4a6b;
+  background-color: rgba(16, 16, 24, 0.9);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 10px 15px;
   font-family: 'Courier New', monospace;
-  color: #00ffaa;
+  color: var(--primary-color);
   display: flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
   z-index: 999;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 255, 170, 0.2);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 15px rgba(180, 160, 140, 0.15);
 }
 
 .ai-assistant-toggle:hover {
-  background-color: rgba(26, 32, 48, 0.95);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 255, 170, 0.3);
+  background-color: rgba(20, 20, 30, 0.95);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(180, 160, 140, 0.25);
 }
 
 .ai-assistant-toggle.hidden {
@@ -171,7 +178,7 @@ body {
 .toggle-icon {
   font-weight: bold;
   font-size: 1.2rem;
-  background-color: rgba(0, 255, 170, 0.2);
+  background-color: rgba(180, 160, 140, 0.15);
   border-radius: 4px;
   padding: 5px;
   display: flex;
@@ -206,7 +213,7 @@ body {
   border-bottom: 1px solid var(--primary-color);
 }
 
-/* Custom scrollbar for the entire site */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -226,35 +233,26 @@ body {
 }
 
 /* Keyframe Animations */
-@keyframes glitch {
+@keyframes neuron-pulse {
   0% {
-    transform: translate(0);
+    transform: scale(1);
+    opacity: 1;
   }
 
-  20% {
-    transform: translate(-2px, 2px);
-  }
-
-  40% {
-    transform: translate(-2px, -2px);
-  }
-
-  60% {
-    transform: translate(2px, 2px);
-  }
-
-  80% {
-    transform: translate(2px, -2px);
+  50% {
+    transform: scale(1.03);
+    opacity: 0.8;
   }
 
   100% {
-    transform: translate(0);
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
 /* Text hover effects */
 .cyberpunk-text:hover {
-  animation: glitch 0.3s linear;
+  animation: neuron-pulse 0.8s ease-in-out;
   text-shadow: 0 0 10px var(--primary-color);
 }
 
@@ -266,7 +264,7 @@ body {
   transform: translateX(-50%);
   font-size: 0.7rem;
   color: var(--text-dark);
-  opacity: 0.7;
+  opacity: 0.5;
   pointer-events: none;
   z-index: 5;
 }
@@ -286,13 +284,13 @@ button {
   background-color: var(--background-light);
   color: var(--text-light);
   font-family: 'Courier New', monospace;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   border-radius: 4px;
 }
 
 button:hover {
   border-color: var(--primary-color);
-  box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+  box-shadow: 0 0 10px rgba(180, 160, 140, 0.2);
   color: var(--primary-color);
 }
 
@@ -315,4 +313,18 @@ button:hover {
   .toggle-text {
     display: none;
   }
+}
+
+/* Background noise texture */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADgSURBVGhD7ZdbCsIwEEXTjbkId+LK3Ie61HQnJnOheRQS23vgQEnHmXuSfJSllPJVly3a9mzRnmeLXlQL4+3dwdiaF8Z1rYvz5oVxXevivHlhXNe6OG9eGNe1Ls6bF5buWu/Po/RrLLuI6wn06UVEvlm6iK+5iOsJ9OlFRL5ZLYTg/Yd1pYe/+pTvI9c0vCsGP9NhYJyJMRc2GxgYGBgYGBgYGBgYGBgYEgyd2VAYp2KQGVwIgYGBgYGBgYGBgYGB+Q/ze9kQGG9mkBlcCIHJyZAYb2aQGVwIwbA88QPWacYGBaCFfgAAAABJRU5ErkJggg==");
+  opacity: 0.015;
+  z-index: -1;
+  pointer-events: none;
 }

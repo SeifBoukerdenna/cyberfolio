@@ -3,12 +3,12 @@ import './App.css';
 
 import projectsData from './data/projectsData';
 import { Project } from './types/Project';
-import ProjectDetail from './components/projectDetail/ProjectDetail';
-import NeuralNetwork from './components/neuralNetwork/NeuralNetwork';
-import AIAssistant from './components/AIAssistant/AIAssistant';
-import Terminal from './components/terminal/Terminal';
 import HackerBootup from './components/hackerBootup/HackerBootup';
 import Particles from './components/particles/Particles';
+import NeuralNetwork from './components/neuralNetwork/NeuralNetwork';
+import ProjectDetail from './components/projectDetail/ProjectDetail';
+import AIAssistant from './components/AIAssistant/AIAssistant';
+import Terminal from './components/terminal/Terminal';
 
 // Add hidden project for the easter egg
 const hiddenProject: Project = {
@@ -54,6 +54,7 @@ function App() {
   const [isTerminalVisible, setIsTerminalVisible] = useState(false);
   const [showBootup, setShowBootup] = useState(true);
   const [secretCommandEntered, setSecretCommandEntered] = useState(false);
+  const [neuralActivityLevel, setNeuralActivityLevel] = useState(0);
 
   // Check if it's the first visit
   useEffect(() => {
@@ -64,7 +65,28 @@ function App() {
     } else {
       localStorage.setItem('hasVisitedCyberfolio', 'true');
     }
+
+    // Start neural activity simulation
+    startNeuralActivitySimulation();
   }, []);
+
+  // Simulate changing neural activity levels
+  const startNeuralActivitySimulation = () => {
+    const simulateActivity = () => {
+      // Random fluctuations in neural activity
+      setNeuralActivityLevel(prev => {
+        const change = (Math.random() - 0.5) * 10;
+        return Math.max(40, Math.min(95, prev + change));
+      });
+
+      // Schedule next update with variable timing for natural feel
+      setTimeout(simulateActivity, 5000 + Math.random() * 10000);
+    };
+
+    // Initial activity level
+    setNeuralActivityLevel(75);
+    simulateActivity();
+  };
 
   // Listen for special key combo to activate terminal
   useEffect(() => {
@@ -113,6 +135,14 @@ function App() {
   // Handle project node click
   const handleProjectSelect = (project: Project) => {
     setSelectedProject(project);
+
+    // Increase neural activity when project is selected
+    setNeuralActivityLevel(prev => Math.min(98, prev + 15));
+
+    // Return to normal after some time
+    setTimeout(() => {
+      setNeuralActivityLevel(prev => Math.max(40, prev - 10));
+    }, 8000);
   };
 
   // Close project detail
@@ -123,7 +153,12 @@ function App() {
   return (
     <div className="app">
       {/* Background elements */}
-      <Particles count={80} color="#00ffaa" />
+      <Particles
+        count={60}
+        color="rgba(180, 170, 155, 0.6)"
+        speed={0.2}
+        maxSize={1.5}
+      />
       <div className="crt-effect"></div>
       <div className="vignette"></div>
 
@@ -169,6 +204,17 @@ function App() {
         <div className="info-item">
           <span className="label">PROJECTS:</span>
           <span className="value">{projectsData.length}</span>
+        </div>
+        <div className="info-item">
+          <span className="label">ACTIVITY:</span>
+          <span className="value">{Math.round(neuralActivityLevel)}%</span>
+        </div>
+      </div>
+
+      {/* Footer information */}
+      <div className="neural-footer">
+        <div className="footer-content">
+          NEURAL INTERFACE v2.5.7
         </div>
       </div>
     </div>
