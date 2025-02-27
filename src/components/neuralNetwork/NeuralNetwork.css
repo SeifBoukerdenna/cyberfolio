@@ -272,3 +272,56 @@
 .mood-erratic {
     color: #ff5500;
 }
+
+
+/* Additional starfield twinkle or glitch overlays */
+.neural-network-container::before {
+    content: '';
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    /* Very slight glitch lines pattern */
+    background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px,
+            transparent 1px);
+    background-size: 100% 3px;
+    mix-blend-mode: screen;
+    animation: glitch-lines 3s linear infinite;
+    opacity: 0.05;
+}
+
+@keyframes glitch-lines {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-3px);
+    }
+}
+
+/* Add spark "pop" animations if you'd like them to expand.
+   The Spark logic mostly draws them on the canvas, so
+   you may not need extra CSS. But an example is below: */
+.spark-pop {
+    position: absolute;
+    pointer-events: none;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: gold;
+    animation: spark-fade 0.5s forwards;
+}
+
+@keyframes spark-fade {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(3);
+        opacity: 0;
+    }
+}

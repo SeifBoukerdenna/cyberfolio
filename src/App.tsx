@@ -7,8 +7,7 @@ import HackerBootup from './components/hackerBootup/HackerBootup';
 import Particles from './components/particles/Particles';
 import NeuralNetwork from './components/neuralNetwork/NeuralNetwork';
 import ProjectDetail from './components/projectDetail/ProjectDetail';
-import AIAssistant from './components/AIAssistant/AIAssistant';
-import Terminal from './components/terminal/Terminal';
+import NeuralTerminal from './components/neuralTerminal/NeuralTerminal';
 
 // Add hidden project for the easter egg
 const hiddenProject: Project = {
@@ -92,7 +91,7 @@ function App() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ctrl + Alt + T to open terminal
-      if (e.ctrlKey && e.altKey && e.key === 't') {
+      if (e.key === 'D') {
         e.preventDefault();
         setIsTerminalVisible(true);
       }
@@ -181,14 +180,8 @@ function App() {
         />
       )}
 
-      {/* AI Assistant */}
-      <AIAssistant
-        projects={projectsData}
-        onProjectSelect={handleProjectSelect}
-      />
-
-      {/* Terminal (easter egg) */}
-      <Terminal
+      {/* Neural Terminal (combined terminal and AI assistant) */}
+      <NeuralTerminal
         projects={allProjects}
         isVisible={isTerminalVisible}
         onClose={() => setIsTerminalVisible(false)}
@@ -210,6 +203,15 @@ function App() {
           <span className="value">{Math.round(neuralActivityLevel)}%</span>
         </div>
       </div>
+
+      {/* Neural Terminal toggle button */}
+      <button
+        className="neural-terminal-toggle"
+        onClick={() => setIsTerminalVisible(true)}
+      >
+        <span className="toggle-icon">AI</span>
+        <span className="toggle-text">NEURAL TERMINAL</span>
+      </button>
 
       {/* Footer information */}
       <div className="neural-footer">

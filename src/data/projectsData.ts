@@ -7,7 +7,7 @@ const projectsData: Project[] = [
     description:
       "A cyberpunk-themed e-commerce platform with real-time product visualization and neural recommendation engine. The platform analyzes user behavior patterns to suggest personalized products through an advanced machine learning algorithm.",
     technologies: ["React", "Node.js", "TensorFlow.js", "GraphQL", "ThreeJS"],
-    image: "/assets/projects/neural-marketplace.jpg",
+    image: "../assets/lll.png",
     demoLink: "https://neural-marketplace.example.com",
     githubLink: "https://github.com/yourusername/neural-marketplace",
     type: "fullstack",
