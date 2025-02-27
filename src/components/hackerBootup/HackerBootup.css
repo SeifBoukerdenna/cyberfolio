@@ -1,0 +1,213 @@
+.bootup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.8s ease-out;
+}
+
+.bootup-overlay.fade-out {
+    opacity: 0;
+}
+
+.bootup-container {
+    width: 80%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    color: #00ffaa;
+    font-family: 'Courier New', monospace;
+}
+
+.bootup-header {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    letter-spacing: 2px;
+}
+
+.bootup-text {
+    height: 300px;
+    overflow: hidden;
+    border: 1px solid #144a34;
+    background-color: rgba(0, 255, 170, 0.05);
+    padding: 1rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    position: relative;
+}
+
+.bootup-line {
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    white-space: nowrap;
+    animation-fill-mode: forwards;
+}
+
+.bootup-progress-container {
+    margin-bottom: 2rem;
+}
+
+.bootup-progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.bootup-progress-bar {
+    height: 20px;
+    background-color: rgba(0, 255, 170, 0.1);
+    border: 1px solid #00ffaa;
+    position: relative;
+    overflow: hidden;
+}
+
+.bootup-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ffaa, #008f60);
+    width: 0%;
+    transition: width 0.1s linear;
+    position: relative;
+}
+
+/* Animated pattern inside progress bar */
+.bootup-progress-fill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(45deg,
+            transparent,
+            transparent 10px,
+            rgba(255, 255, 255, 0.1) 10px,
+            rgba(255, 255, 255, 0.1) 20px);
+    animation: progress-pattern 1s linear infinite;
+}
+
+@keyframes progress-pattern {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 40px 0;
+    }
+}
+
+.bootup-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #008f60;
+}
+
+/* Blinking cursor */
+.blink {
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Typing animation */
+@keyframes type {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+/* Glitch effect */
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+    }
+
+    20% {
+        transform: translate(-2px, 2px);
+    }
+
+    40% {
+        transform: translate(-2px, -2px);
+    }
+
+    60% {
+        transform: translate(2px, 2px);
+    }
+
+    80% {
+        transform: translate(2px, -2px);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}
+
+.bootup-header:hover {
+    animation: glitch 0.3s linear;
+    text-shadow: 0 0 10px #00ffaa;
+}
+
+/* Scanline effect */
+.bootup-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            transparent 50%,
+            rgba(0, 255, 170, 0.05) 50%);
+    background-size: 100% 4px;
+    z-index: 1;
+    pointer-events: none;
+    animation: scanline 10s linear infinite;
+}
+
+@keyframes scanline {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 0 100%;
+    }
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+    .bootup-header {
+        font-size: 1.8rem;
+    }
+
+    .bootup-text {
+        height: 250px;
+    }
+}

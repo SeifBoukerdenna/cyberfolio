@@ -1,0 +1,114 @@
+:root {
+  font-family: 'Courier New', monospace;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #0a0a12;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.1;
+  font-family: 'Courier New', monospace;
+}
+
+button {
+  border-radius: 4px;
+  border: 1px solid #3b4a6b;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: 'Courier New', monospace;
+  background-color: #1a1a2e;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+button:hover {
+  border-color: #00ffaa;
+  color: #00ffaa;
+  box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+}
+
+button:focus,
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 255, 170, 0.5);
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Cyberpunk links */
+a {
+  font-weight: 500;
+  color: #00ffaa;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.2s;
+}
+
+a:hover {
+  color: #00cc88;
+  text-shadow: 0 0 5px rgba(0, 255, 170, 0.5);
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: #00ffaa;
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.3s ease-out;
+}
+
+a:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+/* Keep dark mode */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #0a0a12;
+  }
+
+  a:hover {
+    color: #00cc88;
+  }
+
+  button {
+    background-color: #1a1a2e;
+  }
+}

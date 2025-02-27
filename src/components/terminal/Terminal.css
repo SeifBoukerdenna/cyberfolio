@@ -1,0 +1,344 @@
+.terminal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: terminal-fade-in 0.3s ease-out;
+}
+
+@keyframes terminal-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.terminal-container {
+    width: 90%;
+    max-width: 800px;
+    height: 70%;
+    max-height: 600px;
+    background-color: #050505;
+    border: 1px solid #3b4a6b;
+    border-radius: 6px;
+    box-shadow: 0 0 30px rgba(0, 255, 170, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: terminal-scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes terminal-scale-in {
+    from {
+        transform: scale(0.9);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+.terminal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    background-color: #0a0a12;
+    border-bottom: 1px solid #3b4a6b;
+}
+
+.terminal-title {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #8a8a8a;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.terminal-close {
+    background: transparent;
+    border: none;
+    color: #8a8a8a;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.terminal-close:hover {
+    color: #00ffaa;
+    background-color: rgba(0, 255, 170, 0.1);
+}
+
+.terminal-content {
+    flex: 1;
+    padding: 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #00ff00;
+    overflow-y: auto;
+    background-color: #050505;
+    position: relative;
+    line-height: 1.5;
+}
+
+.terminal-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(0deg,
+            rgba(0, 0, 0, 0.15),
+            rgba(0, 0, 0, 0.15) 1px,
+            transparent 1px,
+            transparent 2px);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+}
+
+.terminal-line {
+    padding: 3px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    position: relative;
+    z-index: 2;
+    line-height: 1.4;
+    text-shadow: 0 0 2px rgba(0, 255, 0, 0.7);
+    margin-bottom: 2px;
+}
+
+.terminal-line.error {
+    color: #ff3333;
+    text-shadow: 0 0 2px rgba(255, 0, 0, 0.7);
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    position: relative;
+    z-index: 2;
+}
+
+.prompt {
+    color: #00ff00;
+    margin-right: 5px;
+}
+
+.terminal-input {
+    background-color: transparent;
+    border: none;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    flex: 1;
+    outline: none;
+    caret-color: #00ff00;
+    padding: 5px 0;
+    text-shadow: 0 0 2px rgba(0, 255, 0, 0.7);
+}
+
+/* Custom Scrollbar for Terminal */
+.terminal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terminal-content::-webkit-scrollbar-track {
+    background: #0a0a12;
+}
+
+.terminal-content::-webkit-scrollbar-thumb {
+    background: #3b4a6b;
+    border-radius: 4px;
+}
+
+.terminal-content::-webkit-scrollbar-thumb:hover {
+    background: #00ffaa;
+}
+
+/* Blinking cursor effect */
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.blink {
+    animation: blink 1s step-end infinite;
+}
+
+.terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 15px;
+    background-color: #00ff00;
+    vertical-align: middle;
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+}
+
+/* Glitch effect for terminal */
+@keyframes terminal-glitch {
+    0% {
+        transform: translate(0);
+    }
+
+    20% {
+        transform: translate(-2px, 2px);
+    }
+
+    40% {
+        transform: translate(-2px, -2px);
+    }
+
+    60% {
+        transform: translate(2px, 2px);
+    }
+
+    80% {
+        transform: translate(2px, -2px);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}
+
+.terminal-container:hover {
+    animation: terminal-glitch 0.3s linear;
+}
+
+/* Terminal grid background */
+.terminal-content::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(rgba(26, 32, 44, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26, 32, 44, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Fix for webkit browsers */
+.terminal-input-line form {
+    width: 100%;
+    display: flex;
+}
+
+/* Terminal input form */
+.terminal-input-form {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+/* Terminal input placeholder */
+.terminal-input::placeholder {
+    color: rgba(0, 255, 0, 0.5);
+}
+
+/* Animation for command execution */
+@keyframes command-execute {
+    0% {
+        opacity: 0.7;
+        transform: translateY(5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.terminal-line:last-of-type {
+    animation: command-execute 0.3s ease-out;
+}
+
+/* Add CRT flicker effect */
+.terminal-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
+    background-size: 100% 4px;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0.2;
+    animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+    0% {
+        opacity: 0.2;
+    }
+
+    50% {
+        opacity: 0.15;
+    }
+
+    100% {
+        opacity: 0.2;
+    }
+}
+
+/* Add pixel noise effect */
+.terminal-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANASURBVGhD7ZlNaBNBFMffjGnagq0VD1ZbD6IgFT+gB0+iKKIX0YNS8CQKfpy8iMdePIgHEcFzRQ+CINaDoCD14EFEtBYqKq1NSmvaJJtkd2ey87ybnbRpZtsks5u29A+PnX2Z3cz+9s3Mm5CQ1WrVRLxA3D2ykqvQZvl5kLtHKuhVuXuQu0cSj1iFhYVAY3NzE+rr6wMdc3BwEKampuDExASMjIxQLyUWIePj4/Do0SMYGBiA7u5uCAcwI5E1Ojr6XwIRKWRsbAz6+/vXPeH9Dx/h4/dv9JiXWCwGs7OzFBMJERJZxMDlJ51Ir6araTMd5Pn00dvzHzKS0F7CRPpPnYUnVy5RxSctLS3BysoKzM3NbSAkskJEhbx8NQKv3rwTmYSISkIZHh6miIhIfGRmZoba1NQUxdXVVQhV3PqJRCIQi8UoXz5/DuJbY7C4uAgtLS2wjFaxOQGa4PzQPNdNvVwAazUNxfIMpNKzYOkrYJkFrn/QjzU9xJQ+fTsOR2/fvEwVr5BQKHSKP1gLT589bw3v2AsdHR3UGJeWlsoYZWz0gsgutYoGhYU3kP7xNfQ0lgmhkpmdHeMO5nTTMlCqUJIR0g46DnSu2CXOybJRMNxcRIU0NjaCxv3DK8Iih+7xzqWWptESkc0jJHJGRrEiK0T1FN1gIZFN0jJC5iKbiVo6pskbNDdNnrQ6BVYskF9N+BrSvfZw43GHvMdpbZaWeX+fENIyQibPNMqlspC5yL98fKSmKlxkNddtw/zO4xPiOwmXlpYodtlWA/NbfGNLjRXBPmEOOPOIiIoX8vu9tq+tbVdHS9OO0M7aenprS6zCa2/jG98Y8BOSNHLFkaHrDw9S7YeIkNfPn1JtkxTSvL0W6mKbJxOIqJCGhgZ4d+8BHO7pgd6uPdTb2NgIhqZTnJ+fh3Q6DYZuQK6Qg3w+D5lMhpafn3OZkJGKSvvl25fUWlpaqS8cDlOdLp9PTVN7L67tWlEhUmIjYqP8Q0JCQkIqDf8f1nBHPOJV2VrJI+w6y9sgd49Yed2Ct0E+HqlgtKWMSfO5+RYRUiYUCkF7e7tQm/I/qGjfAM2B+XSXVs3MAAAAAElFTkSuQmCC");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Make error messages stand out more */
+.terminal-line.error {
+    padding: 5px;
+    margin: 5px 0;
+    background-color: rgba(255, 0, 0, 0.1);
+    border-left: 3px solid #ff3333;
+}
+
+/* Add subtle glow to the entire terminal */
+.terminal-container {
+    box-shadow: 0 0 30px rgba(0, 255, 170, 0.2), inset 0 0 15px rgba(0, 255, 0, 0.05);
+}
