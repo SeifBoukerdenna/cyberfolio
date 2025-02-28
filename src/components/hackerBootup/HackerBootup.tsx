@@ -17,6 +17,7 @@ const HackerBootup: React.FC<HackerBootupProps> = ({ onComplete }) => {
     const [bootComplete, setBootComplete] = useState(false);
 
     // Boot-up sequence text
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const bootSequence: BootLine[] = [
         { text: '> INITIALIZING NEURAL INTERFACE...', delay: 500, duration: 800 },
         { text: '> LOADING CORE MODULES...', delay: 1500, duration: 1000 },
@@ -60,7 +61,7 @@ const HackerBootup: React.FC<HackerBootupProps> = ({ onComplete }) => {
                 setVisibleLines(prev => [...prev, line.text]);
             }, line.delay);
         });
-    }, []);
+    }, [bootSequence]);
 
     // Complete bootup and hide overlay
     useEffect(() => {

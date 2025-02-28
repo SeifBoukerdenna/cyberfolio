@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useRef, useEffect, useState } from 'react';
 import './NeuralNetwork.css';
 import { Project } from '../../types/Project';
@@ -106,6 +107,24 @@ const NeuralNetwork: React.FC<NeuralNetworkProps> = ({ projects, onNodeClick }) 
     // NEW FEATURE: State for starfield particles & spark bursts
     const [particles, setParticles] = useState<Particle[]>([]);
     const [sparks, setSparks] = useState<Spark[]>([]);
+
+    /**
+ * Handler to reset the simulation's state.
+ * This will clear nodes, connections, etc.,
+ * and mark `isInitialized` false so our
+ * initialization effect can run again.
+ */
+    const handleResetSimulation = () => {
+        // Clear everything
+        setNodes([]);
+        setConnections([]);
+        setNetworkEvents([]);
+        setParticles([]);
+        setSparks([]);
+
+        // Force re-initialization
+        setIsInitialized(false);
+    };
 
     // Generate a gentle curved path with minimal curvature
     const generateCurvedPath = (startX: number, startY: number, endX: number, endY: number) => {
@@ -1212,14 +1231,14 @@ const NeuralNetwork: React.FC<NeuralNetworkProps> = ({ projects, onNodeClick }) 
                 }
                 let activeColor;
                 if (node.mood === 'excited') {
-                    activeColor = baseColor.replace(/rgba\((\d+),\s*(\d+),\s*(\d+)/, (m, r, g, b) => {
+                    activeColor = baseColor.replace(/rgba\((\d+),\s*(\d+),\s*(\d+)/, (_m, r, g, b) => {
                         return `rgba(${Math.min(255, parseInt(r) + 20)}, ${g}, ${Math.max(
                             0,
                             parseInt(b) - 10
                         )}`;
                     });
                 } else if (node.mood === 'erratic') {
-                    activeColor = baseColor.replace(/rgba\((\d+),\s*(\d+),\s*(\d+)/, (m, r, g, b) => {
+                    activeColor = baseColor.replace(/rgba\((\d+),\s*(\d+),\s*(\d+)/, (_m, r, g, b) => {
                         return `rgba(${Math.min(255, parseInt(r) + 10)}, ${Math.max(
                             0,
                             parseInt(g) - 10
@@ -1595,8 +1614,14 @@ const NeuralNetwork: React.FC<NeuralNetworkProps> = ({ projects, onNodeClick }) 
                             {metrics.dominantMood}
                         </span>
                     </div>
+                    <div className="simulation-controls">
+                        <button className="reset-button" onClick={handleResetSimulation}>
+                            RESET SIMULATION
+                        </button>
+                    </div>
                 </div>
             </div>
+
         </div>
     );
 };

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useRef, useEffect } from 'react';
 import './Terminal.css';
@@ -637,7 +637,7 @@ const Terminal: React.FC<TerminalProps> = ({
             { text: "", isError: false }
         ];
 
-        Object.entries(miniGames).forEach(([key, game]) => {
+        Object.entries(miniGames).forEach(([, game]) => {
             gameLines.push({
                 text: `${game.name} - ${game.description} [${game.status.toUpperCase()}]`,
                 isError: false
