@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './ProjectDetail.css';
 import { Project } from '../../types/Project';
 
-
 interface ProjectDetailProps {
     project: Project | null;
     onClose: () => void;
@@ -16,16 +15,9 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
     useEffect(() => {
         if (project) {
             setIsLoading(true);
-
-            // Simulate loading for cyberpunk effect
-            const timer1 = setTimeout(() => {
-                setIsLoading(false);
-            }, 1500);
-
-            const timer2 = setTimeout(() => {
-                setShowContent(true);
-            }, 1800);
-
+            // Simulate a loading delay for cyberpunk effect
+            const timer1 = setTimeout(() => setIsLoading(false), 1500);
+            const timer2 = setTimeout(() => setShowContent(true), 1800);
             return () => {
                 clearTimeout(timer1);
                 clearTimeout(timer2);
@@ -41,18 +33,16 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
     return (
         <div className={`project-detail ${showContent ? 'active' : ''}`}>
             <div className="project-detail-background"></div>
-
             <div className="project-detail-container">
-                <div className="project-detail-header">
+                <header className="project-detail-header">
                     <div className="project-title">
                         <h2>{project.title}</h2>
                         <span className="project-id">ID: {project.id}</span>
                     </div>
-
                     <button className="close-button" onClick={onClose}>
-                        <span>×</span>
+                        ×
                     </button>
-                </div>
+                </header>
 
                 {isLoading ? (
                     <div className="loading-container">
@@ -71,7 +61,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                     </div>
                 ) : (
                     <div className="project-content">
-                        <div className="tab-navigation">
+                        <nav className="tab-navigation">
                             <button
                                 className={activeTab === 'overview' ? 'active' : ''}
                                 onClick={() => setActiveTab('overview')}
@@ -90,8 +80,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                             >
                                 CODE ACCESS
                             </button>
-                        </div>
-
+                        </nav>
                         <div className="tab-content">
                             {activeTab === 'overview' && (
                                 <div className="overview-tab">
@@ -105,11 +94,9 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                                         )}
                                         <div className="image-overlay"></div>
                                     </div>
-
                                     <div className="project-description">
                                         <h3>PROJECT DETAILS</h3>
                                         <p>{project.description}</p>
-
                                         <div className="project-stats">
                                             <div className="stat">
                                                 <span className="stat-label">TYPE</span>
@@ -120,14 +107,23 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                                                 <span className="stat-value">{project.status || 'COMPLETED'}</span>
                                             </div>
                                         </div>
-
                                         {project.demoLink && (
                                             <div className="project-links">
-                                                <a href={project.demoLink} target="_blank" rel="noopener noreferrer" className="neon-button">
+                                                <a
+                                                    href={project.demoLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="neon-button"
+                                                >
                                                     LIVE DEMO
                                                 </a>
                                                 {project.githubLink && (
-                                                    <a href={project.githubLink} target="_blank" rel="noopener noreferrer" className="neon-button github">
+                                                    <a
+                                                        href={project.githubLink}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="neon-button github"
+                                                    >
                                                         SOURCE CODE
                                                     </a>
                                                 )}
@@ -136,11 +132,9 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                                     </div>
                                 </div>
                             )}
-
                             {activeTab === 'tech' && (
                                 <div className="tech-tab">
                                     <h3>TECHNOLOGY MATRIX</h3>
-
                                     <div className="tech-grid">
                                         {project.technologies.map((tech, index) => (
                                             <div className="tech-item" key={index}>
@@ -149,7 +143,6 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                                             </div>
                                         ))}
                                     </div>
-
                                     {project.architecture && (
                                         <div className="architecture-section">
                                             <h4>SYSTEM ARCHITECTURE</h4>
@@ -158,31 +151,34 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                                     )}
                                 </div>
                             )}
-
                             {activeTab === 'code' && (
                                 <div className="code-tab">
                                     <h3>CODE FRAGMENTS</h3>
-
                                     <div className="terminal">
                                         <div className="terminal-header">
                                             <span>neural-terminal</span>
                                         </div>
                                         <div className="terminal-content">
-                                            <p>Accessing code repository for {project.title}</p>
-                                            <p> Authorization granted</p>
-                                            <p> Displaying sample code fragment</p>
+                                            <p>Accessing code repository for {project.title}…</p>
+                                            <p>Authorization granted.</p>
+                                            <p>Displaying sample code fragment:</p>
                                             <p className="blink">_</p>
-
                                             {project.codeSnippet ? (
                                                 <pre className="code-snippet">{project.codeSnippet}</pre>
                                             ) : (
-                                                <p className="code-placeholder">[CODE FRAGMENTS ENCRYPTED OR UNAVAILABLE]</p>
+                                                <p className="code-placeholder">
+                                                    [CODE FRAGMENTS ENCRYPTED OR UNAVAILABLE]
+                                                </p>
                                             )}
-
                                             {project.githubLink && (
                                                 <div className="terminal-action">
-                                                    <p> Access complete repository?</p>
-                                                    <a href={project.githubLink} target="_blank" rel="noopener noreferrer" className="terminal-button">
+                                                    <p>Access complete repository?</p>
+                                                    <a
+                                                        href={project.githubLink}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="terminal-button"
+                                                    >
                                                         YES, PROCEED TO GITHUB
                                                     </a>
                                                 </div>
@@ -195,17 +191,14 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                     </div>
                 )}
 
-                <div className="detail-footer">
+                <footer className="detail-footer">
                     <div className="system-stats">
                         <div className="stat">MEM: 87%</div>
                         <div className="stat">CPU: 42%</div>
                         <div className="stat">NET: 128MB/s</div>
                     </div>
-
-                    <div className="footer-id">
-                        NEURAL INTERFACE v2.5.7
-                    </div>
-                </div>
+                    <div className="footer-id">NEURAL INTERFACE v2.5.7</div>
+                </footer>
             </div>
         </div>
     );
