@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import './HackerBootup.css';
 
@@ -34,7 +35,7 @@ const HackerBootup: React.FC<HackerBootupProps> = ({ onComplete }) => {
 
     // Progress bar animation
     useEffect(() => {
-        let timer: NodeJS.Timeout;
+        let timer: any
 
         if (progress < 100) {
             timer = setTimeout(() => {
