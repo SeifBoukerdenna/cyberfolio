@@ -758,3 +758,28 @@ body {
     top: 60px;
   }
 }
+
+.about-toggle {
+  position: fixed;
+  top: 20px;
+  right: 250px;
+  background-color: rgba(16, 16, 24, 0.9);
+  border: 1px solid rgba(200, 175, 155, 0.3);
+  border-radius: 8px;
+  padding: 10px 15px;
+  height: 55px;
+  font-family: 'Courier New', monospace;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  z-index: 99;
+  transition: all 0.3s ease;
+}
+
+.about-toggle:hover {
+  background-color: rgba(20, 20, 30, 0.95);
+  border-color: rgba(200, 175, 155, 0.5);
+  box-shadow: 0 0 20px rgba(180, 160, 140, 0.25);
+}

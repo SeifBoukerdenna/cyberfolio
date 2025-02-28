@@ -17,45 +17,44 @@ const HackerBootup: React.FC<HackerBootupProps> = ({ onComplete }) => {
     const [progress, setProgress] = useState(0);
     const [bootComplete, setBootComplete] = useState(false);
 
-    // Boot-up sequence text
+    // Boot-up sequence text (delays and durations further reduced by half)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const bootSequence: BootLine[] = [
-        { text: '> INITIALIZING NEURAL INTERFACE...', delay: 500, duration: 800 },
-        { text: '> LOADING CORE MODULES...', delay: 1500, duration: 1000 },
-        { text: '> CONNECTING TO NEURAL NETWORK...', delay: 2700, duration: 1200 },
-        { text: '> SCANNING BIOMETRIC SIGNATURES...', delay: 4100, duration: 900 },
-        { text: '> CALIBRATING NEURAL PATHWAYS...', delay: 5200, duration: 1500 },
-        { text: '> OPTIMIZING SYNAPTIC RESPONSES...', delay: 6900, duration: 1200 },
-        { text: '> LOADING PORTFOLIO DATA...', delay: 8300, duration: 1700 },
-        { text: '> ESTABLISHING SECURE CONNECTION...', delay: 10200, duration: 1000 },
-        { text: '> FINAL SYSTEM CHECKS...', delay: 11400, duration: 1600 },
-        { text: '> NEURAL INTERFACE READY.', delay: 13200, duration: 800 },
-        { text: '> WELCOME TO CYBERFOLIO v2.5.7', delay: 14100, duration: 500 }
+        { text: '> INITIALIZING NEURAL INTERFACE...', delay: 25, duration: 40 },
+        { text: '> LOADING CORE MODULES...', delay: 75, duration: 50 },
+        { text: '> CONNECTING TO NEURAL NETWORK...', delay: 135, duration: 60 },
+        { text: '> SCANNING BIOMETRIC SIGNATURES...', delay: 205, duration: 45 },
+        { text: '> CALIBRATING NEURAL PATHWAYS...', delay: 260, duration: 75 },
+        { text: '> OPTIMIZING SYNAPTIC RESPONSES...', delay: 345, duration: 60 },
+        { text: '> LOADING PORTFOLIO DATA...', delay: 415, duration: 85 },
+        { text: '> ESTABLISHING SECURE CONNECTION...', delay: 510, duration: 50 },
+        { text: '> FINAL SYSTEM CHECKS...', delay: 570, duration: 80 },
+        { text: '> NEURAL INTERFACE READY.', delay: 660, duration: 40 },
+        { text: '> WELCOME TO CYBERFOLIO v2.5.7', delay: 705, duration: 25 }
     ];
 
-    // Progress bar animation
+    // Progress bar animation: update interval is now 10ms with larger increments for a faster fill
     useEffect(() => {
-        let timer: any
+        let timer: any;
 
         if (progress < 100) {
             timer = setTimeout(() => {
                 setProgress(prev => {
-                    // Progress speeds up towards the end
-                    const increment = prev < 70 ? 0.4 : prev < 90 ? 0.8 : 1.2;
+                    const increment = prev < 70 ? 3 : prev < 90 ? 5 : 8;
                     return Math.min(prev + increment, 100);
                 });
-            }, 100);
+            }, 10);
         } else if (!bootComplete) {
-            // Delay a bit after reaching 100%
+            // Shorter delay after reaching 100%
             timer = setTimeout(() => {
                 setBootComplete(true);
-            }, 800);
+            }, 100);
         }
 
         return () => clearTimeout(timer);
     }, [progress, bootComplete]);
 
-    // Animate text lines
+    // Animate text lines using the further reduced delays
     useEffect(() => {
         bootSequence.forEach(line => {
             setTimeout(() => {
@@ -64,12 +63,12 @@ const HackerBootup: React.FC<HackerBootupProps> = ({ onComplete }) => {
         });
     }, [bootSequence]);
 
-    // Complete bootup and hide overlay
+    // Complete bootup and hide overlay with a shorter delay
     useEffect(() => {
         if (bootComplete) {
             const timer = setTimeout(() => {
                 onComplete();
-            }, 1200);
+            }, 150);
 
             return () => clearTimeout(timer);
         }
@@ -90,7 +89,7 @@ const HackerBootup: React.FC<HackerBootupProps> = ({ onComplete }) => {
                             key={index}
                             className="bootup-line"
                             style={{
-                                animation: `type ${bootSequence[index]?.duration || 1000}ms steps(${line.length}, end)`
+                                animation: `type ${bootSequence[index]?.duration || 100}ms steps(${line.length}, end)`
                             }}
                         >
                             {line}
