@@ -1,0 +1,26 @@
+.simulation-controls-panel {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(10, 10, 18, 0.85);
+    padding: 10px;
+    border: 1px solid #3b4a6b;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: var(--text-light, #d0c8c0);
+    z-index: 15000;
+    pointer-events: auto;
+    /* Make sure this container accepts pointer events */
+}
+
+.simulation-controls-panel label {
+    display: block;
+    margin-bottom: 8px;
+    pointer-events: auto;
+}
+
+.simulation-controls-panel input[type="range"] {
+    width: 100%;
+    pointer-events: auto;
+}
