@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from 'react';
 import './NeuralChrome.css';
 import { playNeuralSound } from '../neuralAudioManager/NeuralAudioManager';
@@ -29,8 +30,8 @@ const NeuralChrome: React.FC<NeuralChromeProps> = ({
     const [scanlineIntensity, setScanlineIntensity] = useState(0.5);
 
     const containerRef = useRef<HTMLDivElement>(null);
-    const glitchTimeout = useRef<NodeJS.Timeout | null>(null);
-    const chromaTimeout = useRef<NodeJS.Timeout | null>(null);
+    const glitchTimeout = useRef<any | null>(null);
+    const chromaTimeout = useRef<any | null>(null);
 
     // Initialize random glitch effect
     useEffect(() => {
