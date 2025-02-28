@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const IntroModal = () => {
     // State to control visibility of the intro modal

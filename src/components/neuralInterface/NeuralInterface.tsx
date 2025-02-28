@@ -7,24 +7,6 @@ interface NeuralInterfaceProps {
     onActivityChange?: (value: number) => void;
 }
 
-// Neural system messages for random display
-const NEURAL_MESSAGES = [
-    'Synaptic pathways enhanced',
-    'Neural cluster optimized',
-    'Cerebral interface active',
-    'Cognitive analysis in progress',
-    'Memory engram stabilized',
-    'Dendrite amplification: 85%',
-    'Neocortex synchronization complete',
-    'Consciousness stream monitoring active',
-    'Neural partition established',
-    'Limbic resonance detected',
-    'Axon pathway reinforced',
-    'Cognitive matrix expanded',
-    'Neuroplasticity factor: 14.3',
-    'Synapse firing threshold adjusted',
-    'Memory consolidation in progress'
-];
 
 const NeuralInterface: React.FC<NeuralInterfaceProps> = ({
     neuralActivityLevel = 75,
@@ -123,29 +105,6 @@ const NeuralInterface: React.FC<NeuralInterfaceProps> = ({
         setLastMousePosition({ x, y });
     };
 
-    // Display a random neural message at cursor position
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const showMessageAtCursor = (x: number, y: number) => {
-        if (!interfaceRef.current) return;
-
-        const message = NEURAL_MESSAGES[Math.floor(Math.random() * NEURAL_MESSAGES.length)];
-        const messageEl = document.createElement('div');
-        messageEl.className = 'neural-cursor-message';
-        messageEl.textContent = message;
-        messageEl.style.left = `${x}px`;
-        messageEl.style.top = `${y}px`;
-
-        interfaceRef.current.appendChild(messageEl);
-
-        // Remove after animation finishes
-        setTimeout(() => {
-            if (messageEl.parentNode === interfaceRef.current) {
-                if (interfaceRef.current) {
-                    interfaceRef.current.removeChild(messageEl);
-                }
-            }
-        }, 2000);
-    };
 
     return (
         <div
