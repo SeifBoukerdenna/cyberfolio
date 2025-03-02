@@ -90,69 +90,6 @@ interface SimulationParams {
     pulseSpeed: number;
 }
 
-// Inline SimulationControls component
-const SimulationControls: React.FC<{
-    params: SimulationParams;
-    setParams: React.Dispatch<React.SetStateAction<SimulationParams>>;
-}> = ({ params, setParams }) => {
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setParams(prev => ({ ...prev, [name]: parseFloat(value) }));
-    };
-
-    return (
-        <div className="simulation-controls-panel">
-            <label>
-                Node Weight: {params.nodeWeight.toFixed(2)}
-                <input
-                    type="range"
-                    name="nodeWeight"
-                    min="0.5"
-                    max="2"
-                    step="0.1"
-                    value={params.nodeWeight}
-                    onChange={handleChange}
-                />
-            </label>
-            <label>
-                Connection Strength: {params.connectionStrength.toFixed(2)}
-                <input
-                    type="range"
-                    name="connectionStrength"
-                    min="0.5"
-                    max="2"
-                    step="0.1"
-                    value={params.connectionStrength}
-                    onChange={handleChange}
-                />
-            </label>
-            <label>
-                Activation Threshold: {params.activationThreshold.toFixed(2)}
-                <input
-                    type="range"
-                    name="activationThreshold"
-                    min="0.1"
-                    max="1"
-                    step="0.05"
-                    value={params.activationThreshold}
-                    onChange={handleChange}
-                />
-            </label>
-            <label>
-                Pulse Speed: {params.pulseSpeed.toFixed(2)}
-                <input
-                    type="range"
-                    name="pulseSpeed"
-                    min="0.5"
-                    max="2"
-                    step="0.1"
-                    value={params.pulseSpeed}
-                    onChange={handleChange}
-                />
-            </label>
-        </div>
-    );
-};
 
 const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Project) => void }> = ({ projects, onNodeClick }) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -169,7 +106,7 @@ const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Proj
     const lastEventTime = useRef<number>(Date.now());
     const [particles, setParticles] = useState<Particle[]>([]);
     const [sparks, setSparks] = useState<Spark[]>([]);
-    const [simulationParams, setSimulationParams] = useState<SimulationParams>({
+    const [simulationParams,] = useState<SimulationParams>({
         nodeWeight: 1.0,
         connectionStrength: 1.0,
         activationThreshold: 0.3,
@@ -194,21 +131,44 @@ const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Proj
     // Generate a curved path between two points
     const generateCurvedPath = (startX: number, startY: number, endX: number, endY: number) => {
         const points = [];
-        const segments = 12;
+        // Increased segments for smoother curves
+        const segments = 50;
         const dx = endX - startX;
         const dy = endY - startY;
         const dist = Math.sqrt(dx * dx + dy * dy);
         const perpX = -dy / dist;
         const perpY = dx / dist;
-        const maxOffset = Math.min(dist * 0.1, 15);
+
+        // More dramatic curves
+        const maxOffset = Math.min(dist * 0.2, 30);
         const offset = (Math.random() * 2 - 1) * maxOffset;
-        const controlX = (startX + endX) / 2 + perpX * offset;
-        const controlY = (startY + endY) / 2 + perpY * offset;
+
+        // Add multiple control points for more interesting path
+        const controlPoint1X = startX + dx * 0.33 + perpX * offset * 0.7;
+        const controlPoint1Y = startY + dy * 0.33 + perpY * offset * 0.7;
+        const controlPoint2X = startX + dx * 0.66 + perpX * offset * 1.3;
+        const controlPoint2Y = startY + dy * 0.66 + perpY * offset * 1.3;
+
+        // Use cubic bezier curve for more interesting shape
         for (let i = 0; i <= segments; i++) {
             const t = i / segments;
             const u = 1 - t;
-            const x = u * u * startX + 2 * u * t * controlX + t * t * endX;
-            const y = u * u * startY + 2 * u * t * controlY + t * t * endY;
+            const u2 = u * u;
+            const u3 = u2 * u;
+            const t2 = t * t;
+            const t3 = t2 * t;
+
+            // Cubic Bezier formula
+            const x = u3 * startX +
+                3 * u2 * t * controlPoint1X +
+                3 * u * t2 * controlPoint2X +
+                t3 * endX;
+
+            const y = u3 * startY +
+                3 * u2 * t * controlPoint1Y +
+                3 * u * t2 * controlPoint2Y +
+                t3 * endY;
+
             points.push({ x, y });
         }
         return points;
@@ -481,25 +441,37 @@ const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Proj
         for (let i = 1; i < newNodes.length; i++) {
             const projectNode = newNodes[i];
             const points = generateCurvedPath(projectNode.x, projectNode.y, hubNode.x, hubNode.y);
-            const baseWidth = 0.5 + Math.random() * 0.3;
-            const isInhibitory = Math.random() < 0.2;
+
+            // More variation in width
+            const baseWidth = 0.3 + Math.random() * 0.5;
+
+            // Add more variation in inhibitory status
+            const isInhibitory = Math.random() < 0.3;
+
+            // Add some randomness to pulseInterval for more dynamic behavior
+            const pulseInterval = 2000 + Math.random() * 6000;
+
+            // Slightly faster pulses with more variation
+            const pulseSpeed = 0.005 + Math.random() * 0.005;
+
             newConnections.push({
                 source: projectNode,
                 target: hubNode,
-                strength: 0.5 + Math.random() * 0.3,
+                strength: 0.5 + Math.random() * 0.4,
                 points,
                 pulsePositions: [],
                 pulseActive: false,
                 lastPulseTime: Date.now() - Math.random() * 5000,
-                pulseInterval: 3000 + Math.random() * 5000,
-                pulseSpeed: 0.004 + Math.random() * 0.003,
+                pulseInterval,
+                pulseSpeed,
                 width: baseWidth,
                 currentWidth: baseWidth,
                 isInhibitory,
-                health: 0.8 + Math.random() * 0.2,
-                pulseSize: 1.0
+                health: 0.7 + Math.random() * 0.3,
+                pulseSize: 1.0 + Math.random() * 0.5
             });
         }
+
         // Inter-node connections (neighboring and cross connections)
         for (let i = 1; i < newNodes.length; i++) {
             const nextIndex = i < newNodes.length - 1 ? i + 1 : 1;
@@ -1010,16 +982,65 @@ const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Proj
 
             // 2) Connections (axons) with light trails
             updatedConnections.forEach(connection => {
+                // 1. Draw the base connection with gradient
+                const gradient = ctx.createLinearGradient(
+                    connection.source.x,
+                    connection.source.y,
+                    connection.target.x,
+                    connection.target.y
+                );
+
+                // Use color based on inhibitory status
+                const baseColor = connection.isInhibitory
+                    ? 'rgba(150, 140, 160, '
+                    : 'rgba(160, 150, 140, ';
+
+                const glowColor = connection.isInhibitory
+                    ? 'rgba(180, 160, 200, '
+                    : 'rgba(200, 180, 160, ';
+
+                gradient.addColorStop(0, `${baseColor}${0.2 + connection.health * 0.2})`);
+                gradient.addColorStop(0.5, `${glowColor}${0.3 + connection.health * 0.3})`);
+                gradient.addColorStop(1, `${baseColor}${0.2 + connection.health * 0.2})`);
+
+                // Draw main connection line
                 ctx.beginPath();
                 ctx.moveTo(connection.points[0].x, connection.points[0].y);
+
+                // Draw the path
                 for (let i = 1; i < connection.points.length; i++) {
                     ctx.lineTo(connection.points[i].x, connection.points[i].y);
                 }
-                ctx.strokeStyle = connection.isInhibitory
-                    ? `rgba(150, 140, 160, ${0.3 + connection.health * 0.2})`
-                    : `rgba(160, 150, 140, ${0.3 + connection.health * 0.2})`;
+
+                ctx.strokeStyle = gradient;
                 ctx.lineWidth = 1 + connection.currentWidth;
                 ctx.stroke();
+
+                // 2. Add glow effect for connections when active
+                const timeSinceLastPulse = Date.now() - connection.lastPulseTime;
+                if (timeSinceLastPulse < 2000) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(connection.points[0].x, connection.points[0].y);
+
+                    for (let i = 1; i < connection.points.length; i++) {
+                        ctx.lineTo(connection.points[i].x, connection.points[i].y);
+                    }
+
+                    const glowIntensity = Math.max(0, 1 - timeSinceLastPulse / 2000) * 0.6;
+                    ctx.shadowColor = connection.isInhibitory
+                        ? `rgba(180, 160, 220, ${glowIntensity})`
+                        : `rgba(220, 200, 170, ${glowIntensity})`;
+                    ctx.shadowBlur = 8 * connection.health;
+                    ctx.strokeStyle = connection.isInhibitory
+                        ? `rgba(180, 160, 220, ${glowIntensity * 0.7})`
+                        : `rgba(220, 200, 170, ${glowIntensity * 0.7})`;
+                    ctx.lineWidth = (1 + connection.currentWidth) * 1.5;
+                    ctx.stroke();
+                    ctx.restore();
+                }
+
+                // 3. Draw pulse effects with enhanced visuals
                 connection.pulsePositions.forEach(position => {
                     if (position >= 0 && position < 1) {
                         const index = Math.floor(position * (connection.points.length - 1));
@@ -1027,28 +1048,82 @@ const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Proj
                         const subPosition = position * (connection.points.length - 1) - index;
                         const pulseX = connection.points[index].x + (connection.points[nextIndex].x - connection.points[index].x) * subPosition;
                         const pulseY = connection.points[index].y + (connection.points[nextIndex].y - connection.points[index].y) * subPosition;
+
+                        // Main pulse glow
+                        ctx.save();
                         ctx.beginPath();
                         const pulseSize = (2 + connection.strength * 2) * connection.pulseSize;
-                        ctx.arc(pulseX, pulseY, pulseSize, 0, Math.PI * 2);
-                        ctx.fillStyle = connection.isInhibitory
-                            ? `rgba(210, 180, 220, 0.9)`
-                            : `rgba(230, 210, 180, 0.9)`;
+
+                        // Outer glow
+                        const gradientPulse = ctx.createRadialGradient(
+                            pulseX, pulseY, 0,
+                            pulseX, pulseY, pulseSize * 2
+                        );
+
+                        const pulseColor = connection.isInhibitory
+                            ? 'rgba(210, 180, 220, '
+                            : 'rgba(230, 210, 180, ';
+
+                        gradientPulse.addColorStop(0, `${pulseColor}0.9)`);
+                        gradientPulse.addColorStop(0.5, `${pulseColor}0.5)`);
+                        gradientPulse.addColorStop(1, `${pulseColor}0)`);
+
+                        ctx.fillStyle = gradientPulse;
+                        ctx.arc(pulseX, pulseY, pulseSize * 2, 0, Math.PI * 2);
                         ctx.fill();
-                        // Light trail effect
-                        const trailPos = Math.max(0, position - 0.05);
+
+                        // Inner bright core
+                        ctx.beginPath();
+                        ctx.arc(pulseX, pulseY, pulseSize * 0.7, 0, Math.PI * 2);
+                        ctx.fillStyle = connection.isInhibitory
+                            ? 'rgba(240, 210, 255, 0.95)'
+                            : 'rgba(255, 240, 220, 0.95)';
+                        ctx.shadowColor = connection.isInhibitory
+                            ? 'rgba(200, 150, 255, 0.8)'
+                            : 'rgba(255, 220, 180, 0.8)';
+                        ctx.shadowBlur = pulseSize * 2;
+                        ctx.fill();
+                        ctx.restore();
+
+                        // Light trail effect with enhanced visuals
+                        const trailLength = 0.1; // Longer trail
+                        const trailPos = Math.max(0, position - trailLength);
                         const trailIndex = Math.floor(trailPos * (connection.points.length - 1));
                         const trailNextIndex = Math.min(trailIndex + 1, connection.points.length - 1);
                         const trailSubPos = trailPos * (connection.points.length - 1) - trailIndex;
                         const trailX = connection.points[trailIndex].x + (connection.points[trailNextIndex].x - connection.points[trailIndex].x) * trailSubPos;
                         const trailY = connection.points[trailIndex].y + (connection.points[trailNextIndex].y - connection.points[trailIndex].y) * trailSubPos;
+
+                        // Draw trail with gradient
+                        const trailGradient = ctx.createLinearGradient(trailX, trailY, pulseX, pulseY);
+
+                        const trailColor = connection.isInhibitory
+                            ? 'rgba(210, 180, 220, '
+                            : 'rgba(230, 210, 180, ';
+
+                        trailGradient.addColorStop(0, `${trailColor}0)`);
+                        trailGradient.addColorStop(0.5, `${trailColor}0.5)`);
+                        trailGradient.addColorStop(1, `${trailColor}0.8)`);
+
                         ctx.beginPath();
                         ctx.moveTo(trailX, trailY);
                         ctx.lineTo(pulseX, pulseY);
-                        ctx.strokeStyle = connection.isInhibitory
-                            ? 'rgba(210, 180, 220, 0.3)'
-                            : 'rgba(230, 210, 180, 0.3)';
-                        ctx.lineWidth = pulseSize * 0.5;
+                        ctx.strokeStyle = trailGradient;
+                        ctx.lineWidth = pulseSize * 0.7;
                         ctx.stroke();
+
+                        // Add small sparkles along the trail
+                        if (Math.random() < 0.3) {
+                            const sparkX = trailX + (pulseX - trailX) * Math.random();
+                            const sparkY = trailY + (pulseY - trailY) * Math.random();
+
+                            ctx.beginPath();
+                            ctx.arc(sparkX, sparkY, Math.random() * pulseSize * 0.3, 0, Math.PI * 2);
+                            ctx.fillStyle = connection.isInhibitory
+                                ? `rgba(230, 200, 255, ${0.5 + Math.random() * 0.5})`
+                                : `rgba(255, 230, 200, ${0.5 + Math.random() * 0.5})`;
+                            ctx.fill();
+                        }
                     }
                 });
             });
@@ -1437,7 +1512,7 @@ const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Proj
                     </div>
                 </div>
             </div>
-            <SimulationControls params={simulationParams} setParams={setSimulationParams} />
+            {/* <SimulationControls params={simulationParams} setParams={setSimulationParams} /> */}
         </div>
     );
 };

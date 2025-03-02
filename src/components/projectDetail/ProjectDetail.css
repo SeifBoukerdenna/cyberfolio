@@ -1,4 +1,4 @@
-/* Overall Container & Background */
+/* Enhanced Cyberpunk Neural Project Detail Modal */
 .project-detail {
     position: fixed;
     top: 0;
@@ -12,6 +12,369 @@
     justify-content: center;
     align-items: center;
     transition: opacity 0.4s ease, visibility 0.4s ease;
+    perspective: 1000px;
+
+    .architecture-section h4 {
+        font-family: 'Courier New', monospace;
+        font-size: 1.1rem;
+        color: rgba(0, 255, 170, 0.85);
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-weight: normal;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        position: relative;
+        display: inline-block;
+    }
+
+    .architecture-section h4::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: rgba(0, 255, 170, 0.4);
+    }
+
+    .architecture-code {
+        background: rgba(10, 15, 25, 0.7);
+        border: 1px solid rgba(0, 255, 170, 0.15);
+        border-radius: 4px;
+        padding: 15px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        color: rgba(220, 225, 235, 0.9);
+        overflow-x: auto;
+        white-space: pre-wrap;
+        position: relative;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Code Tab with neural terminal aesthetic */
+    .code-tab h3 {
+        font-family: 'Courier New', monospace;
+        font-size: 1.3rem;
+        color: rgba(0, 255, 170, 0.9);
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(0, 255, 170, 0.2);
+        position: relative;
+        font-weight: normal;
+        letter-spacing: 0.5px;
+    }
+
+    .code-tab h3::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        width: 80px;
+        height: 1px;
+        background: rgba(0, 255, 170, 0.8);
+        box-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+    }
+
+    .terminal {
+        background: rgba(8, 12, 20, 0.9);
+        border: 1px solid rgba(0, 255, 170, 0.25);
+        border-radius: 6px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 255, 170, 0.15);
+    }
+
+    .terminal-header {
+        background: linear-gradient(90deg, rgba(15, 25, 35, 0.9), rgba(20, 30, 50, 0.9));
+        padding: 8px 15px;
+        border-bottom: 1px solid rgba(0, 255, 170, 0.25);
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        color: rgba(150, 160, 180, 0.8);
+        display: flex;
+        align-items: center;
+    }
+
+    /* Neural indicator LEDs */
+    .terminal-header::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background-color: rgba(0, 255, 170, 0.8);
+        border-radius: 50%;
+        margin-right: 10px;
+        box-shadow: 0 0 8px rgba(0, 255, 170, 0.7);
+        animation: led-glow 2s infinite alternate;
+    }
+
+    @keyframes led-glow {
+        0% {
+            opacity: 0.7;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .terminal-content {
+        flex: 1;
+        padding: 18px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        color: rgba(210, 215, 225, 0.9);
+        overflow-y: auto;
+        background: rgba(8, 12, 20, 0.95);
+        position: relative;
+        min-height: 300px;
+    }
+
+    /* Scanline effect for terminal */
+    .terminal-content::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom,
+                transparent 50%,
+                rgba(0, 255, 170, 0.03) 50%);
+        background-size: 100% 4px;
+        pointer-events: none;
+        opacity: 0.2;
+        z-index: 3;
+    }
+
+    /* CRT curvature effect */
+    .terminal-content::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(ellipse at center,
+                transparent 0%,
+                rgba(0, 0, 0, 0.2) 90%,
+                rgba(0, 0, 0, 0.4) 100%);
+        pointer-events: none;
+        z-index: 2;
+        opacity: 0.5;
+    }
+
+    .terminal-content p {
+        position: relative;
+        z-index: 4;
+        margin: 5px 0;
+        padding-left: 15px;
+    }
+
+    .terminal-content p::before {
+        content: '>';
+        position: absolute;
+        left: 0;
+        color: rgba(0, 255, 170, 0.7);
+    }
+
+    .blink {
+        animation: blink 1s step-end infinite;
+        color: rgba(0, 255, 170, 0.9);
+    }
+
+    .code-snippet {
+        background: rgba(15, 20, 30, 0.7);
+        border: 1px solid rgba(0, 255, 170, 0.2);
+        border-radius: 4px;
+        padding: 18px;
+        overflow-x: auto;
+        margin: 18px 0;
+        white-space: pre;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        color: rgba(230, 235, 245, 0.9);
+        position: relative;
+        z-index: 4;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Code highlighting */
+    .code-snippet .keyword {
+        color: rgba(255, 100, 255, 0.9);
+    }
+
+    .code-snippet .string {
+        color: rgba(255, 220, 100, 0.9);
+    }
+
+    .code-snippet .comment {
+        color: rgba(100, 180, 100, 0.8);
+    }
+
+    .code-placeholder {
+        color: rgba(150, 160, 180, 0.6);
+        font-style: italic;
+        margin: 20px 0;
+        text-align: center;
+        position: relative;
+        z-index: 4;
+    }
+
+    .terminal-action {
+        margin-top: 25px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 4;
+    }
+
+    .terminal-action p {
+        text-align: center;
+        color: rgba(0, 255, 170, 0.8);
+        margin-bottom: 15px;
+    }
+
+    .terminal-button {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 16px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        color: rgba(0, 255, 170, 0.9);
+        background: rgba(0, 255, 170, 0.07);
+        border: 1px solid rgba(0, 255, 170, 0.5);
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.25s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .terminal-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(0, 255, 170, 0.2) 50%,
+                transparent 100%);
+        transition: all 0.6s ease;
+    }
+
+    .terminal-button:hover {
+        background: rgba(0, 255, 170, 0.15);
+        color: rgba(255, 255, 255, 0.95);
+        border-color: rgba(0, 255, 170, 0.8);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 255, 170, 0.4);
+    }
+
+    .terminal-button:hover::before {
+        left: 100%;
+    }
+
+    /* Footer */
+    .detail-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 22px;
+        background: linear-gradient(90deg, rgba(15, 20, 30, 0.95), rgba(20, 30, 50, 0.95));
+        border-top: 1px solid rgba(0, 255, 170, 0.25);
+        font-family: 'Courier New', monospace;
+        font-size: 0.8rem;
+        color: rgba(150, 160, 180, 0.7);
+    }
+
+    .system-stats {
+        display: flex;
+        gap: 20px;
+    }
+
+    .stat {
+        position: relative;
+    }
+
+    .footer-id {
+        opacity: 0.8;
+        position: relative;
+        padding-left: 18px;
+    }
+
+    /* Neural indicator for footer */
+    .footer-id::before {
+        content: '';
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: rgba(0, 255, 170, 0.5);
+        border-radius: 50%;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        box-shadow: 0 0 8px rgba(0, 255, 170, 0.5);
+        animation: neural-pulse 2s infinite alternate;
+    }
+
+    /* Make the system stats blink occasionally like real data */
+    @keyframes stat-update {
+
+        0%,
+        95%,
+        100% {
+            opacity: 1;
+        }
+
+        97% {
+            opacity: 0.5;
+        }
+    }
+
+    .system-stats .stat:nth-child(1) {
+        animation: stat-update 5s infinite;
+    }
+
+    .system-stats .stat:nth-child(2) {
+        animation: stat-update 7s infinite;
+    }
+
+    .system-stats .stat:nth-child(3) {
+        animation: stat-update 9s infinite;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .project-detail-container {
+            width: 95%;
+            height: 90%;
+        }
+
+        .overview-tab {
+            flex-direction: column;
+        }
+
+        .project-image-container {
+            padding-bottom: 50%;
+        }
+
+        .tech-grid {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        }
+
+        .project-stats {
+            flex-wrap: wrap;
+        }
+    }
 }
 
 .project-detail.active {
@@ -25,146 +388,243 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(5, 5, 15, 0.9), rgba(20, 20, 40, 0.9));
+    background: radial-gradient(circle at 50% 50%, rgba(10, 10, 18, 0.92), rgba(5, 5, 15, 0.98));
     backdrop-filter: blur(8px);
     z-index: -1;
 }
 
-/* Neon Pulsing Border Effect */
+/* Scanline effect */
+.project-detail-background::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            transparent 50%,
+            rgba(0, 255, 170, 0.03) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Animated glowing border effect */
 .project-detail-container {
     position: relative;
     width: 90%;
-    max-width: 1200px;
+    max-width: 1100px;
     height: 85%;
-    background: rgba(10, 15, 25, 0.98);
-    border: 2px solid rgba(0, 255, 170, 0.4);
-    border-radius: 12px;
+    background: rgba(10, 12, 20, 0.92);
+    border: 1px solid rgba(0, 255, 170, 0.3);
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 0 40px rgba(0, 255, 170, 0.5);
-    animation: appear 0.6s ease-out, neonPulse 2s infinite alternate;
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.8),
+        0 0 15px rgba(0, 255, 170, 0.3),
+        inset 0 0 20px rgba(0, 0, 0, 0.5);
+    animation: appear 0.6s cubic-bezier(0.19, 1, 0.22, 1);
     display: flex;
     flex-direction: column;
     backdrop-filter: saturate(150%);
 }
 
-/* Appear & Neon Pulse Animation */
+/* Corner accents for cyberpunk feel */
+.project-detail-container::before,
+.project-detail-container::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(0, 255, 170, 0.5);
+    z-index: 10;
+}
+
+.project-detail-container::before {
+    top: -1px;
+    left: -1px;
+    border-right: none;
+    border-bottom: none;
+    box-shadow: -5px -5px 10px rgba(0, 255, 170, 0.1);
+}
+
+.project-detail-container::after {
+    bottom: -1px;
+    right: -1px;
+    border-left: none;
+    border-top: none;
+    box-shadow: 5px 5px 10px rgba(0, 255, 170, 0.1);
+}
+
 @keyframes appear {
     from {
-        transform: scale(0.95);
+        transform: scale(0.95) translateY(10px);
         opacity: 0;
     }
 
     to {
-        transform: scale(1);
+        transform: scale(1) translateY(0);
         opacity: 1;
     }
 }
 
-@keyframes neonPulse {
-    from {
-        border-color: rgba(0, 255, 170, 0.4);
-        box-shadow: 0 0 30px rgba(0, 255, 170, 0.3);
+@keyframes neonBorder {
+
+    0%,
+    100% {
+        border-color: rgba(0, 255, 170, 0.3);
+        box-shadow:
+            0 0 30px rgba(0, 0, 0, 0.8),
+            0 0 15px rgba(0, 255, 170, 0.3);
     }
 
-    to {
-        border-color: rgba(0, 255, 170, 0.7);
-        box-shadow: 0 0 50px rgba(0, 255, 170, 0.6);
+    50% {
+        border-color: rgba(0, 255, 170, 0.6);
+        box-shadow:
+            0 0 30px rgba(0, 0, 0, 0.8),
+            0 0 25px rgba(0, 255, 170, 0.5);
     }
 }
 
-/* Header */
+/* Header with data hologram aesthetic */
 .project-detail-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 24px;
-    background: linear-gradient(90deg, #0f1620, #1a2639);
+    padding: 16px 22px;
+    background: linear-gradient(90deg, rgba(10, 15, 25, 0.95), rgba(20, 30, 50, 0.95));
     border-bottom: 1px solid rgba(0, 255, 170, 0.3);
     position: relative;
     overflow: hidden;
 }
 
-.project-detail-header::after {
+/* Horizontal scan line on header */
+.project-detail-header::before {
     content: '';
     position: absolute;
-    left: -50%;
-    top: 0;
-    width: 200%;
-    height: 100%;
-    background: repeating-linear-gradient(-45deg,
-            transparent,
-            transparent 5px,
-            rgba(0, 255, 170, 0.1) 5px,
-            rgba(0, 255, 170, 0.1) 10px);
-    animation: glitch 3s infinite;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(0, 255, 170, 0) 15%,
+            rgba(0, 255, 170, 0.5) 50%,
+            rgba(0, 255, 170, 0) 85%,
+            transparent 100%);
     opacity: 0.3;
+    animation: scan-header 4s linear infinite;
 }
 
-@keyframes glitch {
+@keyframes scan-header {
     0% {
-        transform: translate(0);
-    }
-
-    20% {
-        transform: translate(-5px, 5px);
-    }
-
-    40% {
-        transform: translate(5px, -5px);
-    }
-
-    60% {
-        transform: translate(-3px, 3px);
-    }
-
-    80% {
-        transform: translate(3px, -3px);
+        transform: translateX(-100%);
     }
 
     100% {
-        transform: translate(0);
+        transform: translateX(100%);
     }
+}
+
+/* Circuit pattern overlay on header */
+.project-detail-header::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(90deg, transparent 50%, rgba(0, 255, 170, 0.03) 50%),
+        linear-gradient(transparent 50%, rgba(0, 255, 170, 0.03) 50%);
+    background-size: 20px 20px;
+    opacity: 0.15;
+    pointer-events: none;
+}
+
+.project-title {
+    display: flex;
+    flex-direction: column;
 }
 
 .project-title h2 {
     margin: 0;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #e0e0e0;
-    text-shadow: 0 0 12px rgba(0, 255, 170, 0.6);
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: rgba(220, 220, 230, 0.95);
+    text-shadow: 0 0 10px rgba(0, 255, 170, 0.4);
     letter-spacing: 1px;
+    position: relative;
+    padding-left: 15px;
+}
+
+/* Vertical indicator before title */
+.project-title h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10%;
+    height: 80%;
+    width: 3px;
+    background: rgba(0, 255, 170, 0.7);
+    border-radius: 1px;
+    box-shadow: 0 0 8px rgba(0, 255, 170, 0.6);
 }
 
 .project-id {
     font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
-    color: #8a8a8a;
+    font-size: 0.75rem;
+    color: rgba(150, 150, 160, 0.8);
     letter-spacing: 0.8px;
+    margin-top: 4px;
+    padding-left: 15px;
 }
 
-/* Close Button */
+/* Close button with futuristic design */
 .close-button {
-    background: transparent;
-    border: 2px solid rgba(0, 255, 170, 0.5);
-    color: #e0e0e0;
-    font-size: 1.8rem;
+    background: rgba(15, 20, 30, 0.6);
+    border: 1px solid rgba(0, 255, 170, 0.4);
+    color: rgba(230, 230, 240, 0.8);
+    font-size: 1.5rem;
     cursor: pointer;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.close-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg,
+            rgba(0, 255, 170, 0.2) 0%,
+            transparent 80%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
 }
 
 .close-button:hover {
-    background-color: rgba(0, 255, 170, 0.1);
-    color: #00ffaa;
-    transform: scale(1.1);
+    background-color: rgba(0, 255, 170, 0.15);
+    color: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 255, 170, 0.7);
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(0, 255, 170, 0.4);
 }
 
-/* Loading Animation */
+.close-button:hover::before {
+    opacity: 1;
+}
+
+/* Loading animation with neural network theme */
 .loading-container {
     display: flex;
     flex-direction: column;
@@ -172,25 +632,67 @@
     justify-content: center;
     height: 100%;
     padding: 30px;
+    background: rgba(10, 12, 20, 0.9);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Neural node pulses in background during loading */
+.loading-container::before {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle,
+            rgba(0, 255, 170, 0.2) 0%,
+            rgba(0, 255, 170, 0.1) 40%,
+            transparent 70%);
+    border-radius: 50%;
+    opacity: 0.5;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse-loading 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes pulse-loading {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.2;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.5;
+    }
 }
 
 .loading-bar {
     width: 80%;
-    max-width: 600px;
-    height: 20px;
-    background-color: #121521;
-    border: 1px solid rgba(0, 255, 170, 0.2);
-    border-radius: 10px;
+    max-width: 500px;
+    height: 4px;
+    background-color: rgba(20, 25, 35, 0.7);
+    border-radius: 2px;
     overflow: hidden;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    position: relative;
 }
 
 .loading-progress {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #00ffaa, #0072ff);
-    animation: progress 1.5s ease-in-out;
-    animation-fill-mode: forwards;
+    background: linear-gradient(90deg,
+            rgba(0, 255, 170, 0.7),
+            rgba(0, 255, 170, 0.9),
+            rgba(0, 255, 170, 0.7));
+    background-size: 200% 100%;
+    animation:
+        progress 1.5s ease-in-out forwards,
+        gradient-shift 2s linear infinite;
+    box-shadow: 0 0 8px rgba(0, 255, 170, 0.5);
 }
 
 @keyframes progress {
@@ -207,11 +709,23 @@
     }
 }
 
+@keyframes gradient-shift {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: -100% 0;
+    }
+}
+
 .loading-text {
     font-family: 'Courier New', monospace;
     font-size: 1.2rem;
-    color: #00ffaa;
-    margin-bottom: 20px;
+    color: rgba(0, 255, 170, 0.9);
+    margin-bottom: 25px;
+    text-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+    position: relative;
 }
 
 .blink {
@@ -227,14 +741,32 @@
 .loading-details {
     font-family: 'Courier New', monospace;
     font-size: 0.9rem;
-    color: #8a8a8a;
+    color: rgba(180, 180, 190, 0.75);
     text-align: center;
+    max-width: 500px;
 }
 
 .loading-details p {
-    margin: 5px 0;
+    margin: 8px 0;
     animation: fadeIn 0.5s ease-in;
     animation-fill-mode: both;
+    position: relative;
+    padding-left: 20px;
+}
+
+.loading-details p::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    color: rgba(0, 255, 170, 0.8);
+}
+
+.loading-details p:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.loading-details p:nth-child(3) {
+    animation-delay: 1s;
 }
 
 @keyframes fadeIn {
@@ -249,62 +781,96 @@
     }
 }
 
-/* Tab Navigation */
+/* Neural tab navigation */
 .tab-navigation {
     display: flex;
-    background-color: #151828;
-    border-bottom: 1px solid rgba(0, 255, 170, 0.3);
+    background-color: rgba(15, 20, 30, 0.95);
+    border-bottom: 1px solid rgba(0, 255, 170, 0.2);
+    padding: 0 12px;
 }
 
 .tab-navigation button {
     background: transparent;
     border: none;
-    color: #8a8a8a;
-    padding: 14px 26px;
+    color: rgba(160, 165, 180, 0.7);
+    padding: 12px 20px;
     font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: all 0.3s ease;
     position: relative;
+    margin: 0 5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-weight: normal;
+    border-bottom: 2px solid transparent;
 }
 
 .tab-navigation button:hover {
-    color: #e0e0e0;
+    color: rgba(220, 225, 235, 0.9);
+    background: rgba(0, 255, 170, 0.05);
+    border-color: transparent;
+    box-shadow: none;
 }
 
 .tab-navigation button.active {
-    color: #00ffaa;
+    color: rgba(0, 255, 170, 0.9);
+    border-bottom: 2px solid rgba(0, 255, 170, 0.6);
+    background: rgba(0, 255, 170, 0.07);
+    text-shadow: 0 0 8px rgba(0, 255, 170, 0.4);
 }
 
-.tab-navigation button.active::after {
+.tab-navigation button.active::before {
     content: '';
     position: absolute;
-    bottom: 0;
+    bottom: -2px;
     left: 0;
     width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, #00ffaa, transparent);
-    animation: underlinePulse 2s infinite alternate;
+    height: 2px;
+    background: rgba(0, 255, 170, 0.8);
+    box-shadow: 0 0 10px rgba(0, 255, 170, 0.8);
+    animation: tab-glow 2s ease-in-out infinite;
 }
 
-@keyframes underlinePulse {
-    from {
-        opacity: 0.7;
+@keyframes tab-glow {
+
+    0%,
+    100% {
+        opacity: 0.8;
     }
 
-    to {
-        opacity: 1;
+    50% {
+        opacity: 0.4;
     }
 }
 
-/* Tab Content */
+/* Tab content with better visual hierarchy */
 .tab-content {
     flex: 1;
     overflow-y: auto;
     padding: 24px;
+    background: rgba(12, 15, 25, 0.95);
+    position: relative;
 }
 
-/* Overview Tab */
+/* Subtle grid pattern in background */
+.tab-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(rgba(0, 255, 170, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 170, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: center center;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+/* Overview tab with futuristic project display */
 .overview-tab {
     display: flex;
     flex-wrap: wrap;
@@ -315,26 +881,15 @@
     position: relative;
     flex: 1 1 45%;
     height: 0;
-    padding-bottom: 56.25%;
-    background-color: #1a1a2e;
-    border: 2px solid rgba(0, 255, 170, 0.3);
-    border-radius: 8px;
+    padding-bottom: 30%;
+    background-color: rgba(15, 18, 28, 0.8);
+    border: 1px solid rgba(0, 255, 170, 0.3);
+    border-radius: 6px;
     overflow: hidden;
-    animation: imageFloat 4s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 255, 170, 0.1);
 }
 
-@keyframes imageFloat {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-5px);
-    }
-}
-
+/* Holographic effect for images */
 .project-image {
     position: absolute;
     top: 0;
@@ -342,6 +897,15 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: 0.85;
+    filter: brightness(1.1) contrast(1.1) saturate(0.9);
+    transform: scale(1.01);
+    transition: all 0.3s ease;
+}
+
+.project-image-container:hover .project-image {
+    filter: brightness(1.2) contrast(1.2) saturate(1.1);
+    transform: scale(1.03);
 }
 
 .project-image-placeholder {
@@ -355,21 +919,68 @@
     justify-content: center;
     font-family: 'Courier New', monospace;
     font-size: 0.9rem;
-    color: #8a8a8a;
+    color: rgba(160, 165, 180, 0.6);
+    background: linear-gradient(135deg,
+            rgba(15, 20, 30, 0.8) 0%,
+            rgba(25, 35, 50, 0.8) 100%);
 }
 
+/* Scan line effect */
 .image-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: repeating-linear-gradient(180deg,
-            transparent,
-            transparent 2px,
-            rgba(0, 0, 0, 0.2) 2px,
-            rgba(0, 0, 0, 0.2) 4px);
+    background: linear-gradient(to bottom,
+            transparent 50%,
+            rgba(0, 255, 170, 0.03) 50%);
+    background-size: 100% 4px;
     pointer-events: none;
+    opacity: 0.3;
+    z-index: 5;
+}
+
+/* Holographic frame for images */
+.project-image-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(0, 255, 170, 0.3);
+    box-shadow: inset 0 0 20px rgba(0, 255, 170, 0.1);
+    z-index: 4;
+    pointer-events: none;
+    border-radius: 5px;
+}
+
+/* Neural projection animation over images */
+.project-image-container::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(135deg,
+            transparent 0%,
+            rgba(0, 255, 170, 0.05) 50%,
+            transparent 100%);
+    animation: hologram-scan 8s linear infinite;
+    pointer-events: none;
+    z-index: 3;
+}
+
+@keyframes hologram-scan {
+    0% {
+        transform: rotate(0deg) translateY(-30%);
+    }
+
+    100% {
+        transform: rotate(360deg) translateY(-30%);
+    }
 }
 
 .project-description {
@@ -381,20 +992,37 @@
 
 .project-description h3 {
     font-family: 'Courier New', monospace;
-    font-size: 1.4rem;
-    color: #00ffaa;
+    font-size: 1.3rem;
+    color: rgba(0, 255, 170, 0.9);
     margin-top: 0;
     margin-bottom: 15px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid rgba(0, 255, 170, 0.3);
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 255, 170, 0.2);
+    position: relative;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+/* Indicator on headings */
+.project-description h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 80px;
+    height: 1px;
+    background: rgba(0, 255, 170, 0.8);
+    box-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
 }
 
 .project-description p {
-    color: #e0e0e0;
+    color: rgba(210, 215, 225, 0.85);
     line-height: 1.6;
     margin-bottom: 20px;
+    font-size: 0.95rem;
 }
 
+/* Project stats with cybernetic styling */
 .project-stats {
     display: flex;
     gap: 20px;
@@ -404,25 +1032,43 @@
 .stat {
     display: flex;
     flex-direction: column;
-    background: rgba(16, 20, 30, 0.75);
-    border: 1px solid rgba(0, 255, 170, 0.3);
-    border-radius: 6px;
+    background: rgba(15, 20, 30, 0.8);
+    border: 1px solid rgba(0, 255, 170, 0.2);
+    border-radius: 4px;
     padding: 10px 16px;
+    position: relative;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2), 0 0 5px rgba(0, 255, 170, 0.1);
+    overflow: hidden;
+}
+
+/* Neural line indicator */
+.stat::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: rgba(0, 255, 170, 0.6);
+    opacity: 0.8;
 }
 
 .stat-label {
     font-family: 'Courier New', monospace;
-    font-size: 0.8rem;
-    color: #8a8a8a;
+    font-size: 0.75rem;
+    color: rgba(150, 160, 180, 0.7);
     margin-bottom: 4px;
+    letter-spacing: 0.5px;
 }
 
 .stat-value {
     font-family: 'Courier New', monospace;
     font-size: 1rem;
-    color: #e0e0e0;
+    color: rgba(230, 235, 245, 0.9);
+    font-weight: bold;
 }
 
+/* Neural buttons for links */
 .project-links {
     display: flex;
     gap: 20px;
@@ -431,45 +1077,92 @@
 
 .neon-button {
     display: inline-block;
-    padding: 12px 24px;
+    padding: 10px 20px;
     font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    color: #00ffaa;
-    background: rgba(0, 255, 170, 0.1);
-    border: 2px solid #00ffaa;
-    border-radius: 6px;
+    font-size: 0.85rem;
+    color: rgba(0, 255, 170, 0.9);
+    background: rgba(0, 255, 170, 0.05);
+    border: 1px solid rgba(0, 255, 170, 0.5);
+    border-radius: 4px;
     text-decoration: none;
     text-align: center;
-    transition: all 0.2s ease;
-    box-shadow: 0 0 12px rgba(0, 255, 170, 0.2);
+    transition: all 0.25s ease;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3), 0 0 5px rgba(0, 255, 170, 0.2);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.neon-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(0, 255, 170, 0.2) 50%,
+            transparent 100%);
+    transition: all 0.6s ease;
 }
 
 .neon-button:hover {
-    background: rgba(0, 255, 170, 0.2);
-    box-shadow: 0 0 18px rgba(0, 255, 170, 0.4);
+    background: rgba(0, 255, 170, 0.15);
+    color: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 255, 170, 0.8);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 255, 170, 0.4);
+    transform: translateY(-2px);
+}
+
+.neon-button:hover::before {
+    left: 100%;
 }
 
 .neon-button.github {
-    color: #ff00ff;
-    background: rgba(255, 0, 255, 0.1);
-    border-color: #ff00ff;
-    box-shadow: 0 0 12px rgba(255, 0, 255, 0.2);
+    color: rgba(255, 100, 255, 0.9);
+    background: rgba(255, 100, 255, 0.05);
+    border-color: rgba(255, 100, 255, 0.5);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3), 0 0 5px rgba(255, 100, 255, 0.2);
+}
+
+.neon-button.github::before {
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 100, 255, 0.2) 50%,
+            transparent 100%);
 }
 
 .neon-button.github:hover {
-    background: rgba(255, 0, 255, 0.2);
-    box-shadow: 0 0 18px rgba(255, 0, 255, 0.4);
+    background: rgba(255, 100, 255, 0.15);
+    border-color: rgba(255, 100, 255, 0.8);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 100, 255, 0.4);
 }
 
-/* Tech Tab */
+/* Tech Tab - Hexagonal tech grid */
 .tech-tab h3 {
     font-family: 'Courier New', monospace;
-    font-size: 1.4rem;
-    color: #00ffaa;
+    font-size: 1.3rem;
+    color: rgba(0, 255, 170, 0.9);
     margin-top: 0;
     margin-bottom: 20px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid rgba(0, 255, 170, 0.3);
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 255, 170, 0.2);
+    position: relative;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+.tech-tab h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 80px;
+    height: 1px;
+    background: rgba(0, 255, 170, 0.8);
+    box-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
 }
 
 .tech-grid {
@@ -483,155 +1176,101 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba(16, 20, 30, 0.75);
-    border: 1px solid rgba(0, 255, 170, 0.3);
+    background: rgba(15, 20, 30, 0.7);
+    border: 1px solid rgba(0, 255, 170, 0.2);
     border-radius: 6px;
-    padding: 15px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 15px 10px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hex grid effect */
+.tech-item::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+        repeating-linear-gradient(0deg,
+            transparent,
+            transparent 4px,
+            rgba(0, 255, 170, 0.03) 4px,
+            rgba(0, 255, 170, 0.03) 5px);
+    opacity: 0.2;
+    transform: rotate(30deg);
+    pointer-events: none;
+    z-index: 0;
 }
 
 .tech-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0, 255, 170, 0.3);
+    transform: translateY(-5px);
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.4),
+        0 0 15px rgba(0, 255, 170, 0.3);
+    border-color: rgba(0, 255, 170, 0.5);
+    background: rgba(15, 25, 35, 0.8);
 }
 
 .tech-icon {
-    width: 40px;
-    height: 40px;
+    width: 46px;
+    height: 46px;
     background: rgba(0, 255, 170, 0.1);
-    border: 2px solid #00ffaa;
-    border-radius: 50%;
+    border: 1px solid rgba(0, 255, 170, 0.4);
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
-    color: #00ffaa;
-    margin-bottom: 10px;
+    font-size: 1.4rem;
+    color: rgba(0, 255, 170, 0.9);
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 8px rgba(0, 255, 170, 0.5);
+}
+
+.tech-item:hover .tech-icon {
+    background: rgba(0, 255, 170, 0.15);
+    box-shadow: 0 0 15px rgba(0, 255, 170, 0.4);
+    transform: scale(1.1);
 }
 
 .tech-name {
     font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    color: #e0e0e0;
-    text-align: center;
-}
-
-/* Architecture Section */
-.architecture-section h4 {
-    font-family: 'Courier New', monospace;
-    font-size: 1rem;
-    color: #e0e0e0;
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-
-.architecture-code {
-    background: #1a1a2e;
-    border: 1px solid rgba(0, 255, 170, 0.3);
-    border-radius: 6px;
-    padding: 15px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    color: #e0e0e0;
-    overflow-x: auto;
-    white-space: pre-wrap;
-}
-
-/* Code Tab */
-.code-tab h3 {
-    font-family: 'Courier New', monospace;
-    font-size: 1.4rem;
-    color: #00ffaa;
-    margin-top: 0;
-    margin-bottom: 20px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid rgba(0, 255, 170, 0.3);
-}
-
-.terminal {
-    background: #0a0a12;
-    border: 1px solid rgba(0, 255, 170, 0.3);
-    border-radius: 6px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.terminal-header {
-    background: #151828;
-    padding: 10px 18px;
-    border-bottom: 1px solid rgba(0, 255, 170, 0.3);
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    color: #8a8a8a;
-}
-
-.terminal-content {
-    flex: 1;
-    padding: 18px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    color: #e0e0e0;
-    overflow-y: auto;
-}
-
-.code-snippet {
-    background: #151828;
-    border: 1px solid rgba(0, 255, 170, 0.3);
-    border-radius: 6px;
-    padding: 15px;
-    overflow-x: auto;
-    margin: 18px 0;
-    white-space: pre;
-}
-
-.code-placeholder {
-    color: #8a8a8a;
-    font-style: italic;
-    margin: 20px 0;
-}
-
-.terminal-action {
-    margin-top: 20px;
-}
-
-.terminal-button {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 18px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    color: #00ffaa;
-    background: transparent;
-    border: 2px solid #00ffaa;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: background 0.2s ease, box-shadow 0.2s ease;
-}
-
-.terminal-button:hover {
-    background: rgba(0, 255, 170, 0.1);
-    box-shadow: 0 0 12px rgba(0, 255, 170, 0.3);
-}
-
-/* Footer */
-.detail-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 24px;
-    background: #151828;
-    border-top: 1px solid rgba(0, 255, 170, 0.3);
-    font-family: 'Courier New', monospace;
     font-size: 0.85rem;
-    color: #8a8a8a;
+    color: rgba(220, 225, 235, 0.9);
+    text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
-.system-stats {
-    display: flex;
-    gap: 20px;
+/* Architecture section with blueprint style */
+.architecture-section {
+    margin-top: 30px;
+    position: relative;
+    padding: 20px;
+    background: rgba(15, 20, 30, 0.7);
+    border: 1px solid rgba(0, 255, 170, 0.2);
+    border-radius: 6px;
 }
 
-.footer-id {
-    opacity: 0.75;
+/* Blueprint grid background */
+.architecture-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(rgba(0, 255, 170, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 170, 0.05) 1px, transparent 1px);
+    background-size: 15px 15px;
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 5px;
 }

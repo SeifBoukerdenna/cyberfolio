@@ -11,7 +11,6 @@ import NeuralInterface from './components/neuralInterface/NeuralInterface';
 import NeuralAudioManager, { playNeuralSound } from './components/neuralAudioManager/NeuralAudioManager';
 import NeuralAudioVisualizer from './components/neuralAudioVisualizer/NeuralAudioVisualizer';
 import NeuralChrome from './components/neuralChrome/NeuralChrome';
-import NeuralDashboard from './components/neuralDashboard/NeuralDashboard';
 import IntroModal from './components/introModal/IntroModal';
 import AboutModal from './components/aboutModal/AboutModal';
 
@@ -68,14 +67,6 @@ function App() {
   const [neuralEvents, setNeuralEvents] = useState<{ type: string; message: string; timestamp: number }[]>([]);
   const [showAbout, setShowAbout] = useState<boolean>(false);
 
-  // Simulated network diagnostics (unused state example)
-  const [, setNetworkDiagnostics] = useState({
-    activity: 16,
-    neurons: '1/6',
-    pulses: 0,
-    health: 93,
-    state: 'STABLE'
-  });
 
   useEffect(() => {
     // Start neural activity simulation
@@ -116,20 +107,6 @@ function App() {
         const change = (Math.random() - 0.5) * 5;
         return Math.max(40, Math.min(95, prev + change));
       });
-
-      if (Math.random() < 0.5) {
-        setNetworkDiagnostics(prev => {
-          const newActivity = prev.activity + Math.floor((Math.random() - 0.5) * 3);
-          const newPulses = Math.max(0, prev.pulses + Math.floor((Math.random() - 0.5) * 2));
-          return {
-            activity: Math.max(5, Math.min(60, newActivity)),
-            neurons: Math.random() < 0.1 ? `${1 + Math.floor(Math.random() * 2)}/6` : prev.neurons,
-            pulses: newPulses,
-            health: prev.health,
-            state: prev.state
-          };
-        });
-      }
 
       if (Math.random() < 0.15) {
         addBrainwaveMessage();
@@ -215,12 +192,6 @@ function App() {
     playNeuralSound('synapse');
     addNeuralEvent('project', `Accessing project: ${project.title}`);
     setNeuralActivityLevel(prev => Math.min(98, prev + 15));
-    setNetworkDiagnostics(prev => ({
-      ...prev,
-      activity: Math.min(60, prev.activity + 15),
-      pulses: prev.pulses + 3,
-      state: 'WAVE'
-    }));
     setTimeout(() => {
       setNeuralActivityLevel(prev => Math.max(40, prev - 10));
     }, 8000);
@@ -362,7 +333,6 @@ function App() {
         <div className="neural-footer">
           NEURAL INTERFACE v2.5.7
         </div>
-        <NeuralDashboard />
       </div>
     </NeuralChrome>
   );

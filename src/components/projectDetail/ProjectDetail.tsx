@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ProjectDetail.css';
 import { Project } from '../../types/Project';
+import { playNeuralSound } from '../neuralAudioManager/NeuralAudioManager';
 
 interface ProjectDetailProps {
     project: Project | null;
@@ -11,22 +12,83 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [showContent, setShowContent] = useState(false);
     const [activeTab, setActiveTab] = useState<'overview' | 'tech' | 'code'>('overview');
+    const [loadingProgress, setLoadingProgress] = useState(0);
+    const [loadingMessages, setLoadingMessages] = useState<string[]>([]);
 
     useEffect(() => {
         if (project) {
             setIsLoading(true);
-            // Simulate a loading delay for cyberpunk effect
-            const timer1 = setTimeout(() => setIsLoading(false), 1500);
-            const timer2 = setTimeout(() => setShowContent(true), 1800);
+            setShowContent(false);
+            setLoadingProgress(0);
+            setLoadingMessages([]);
+
+            // Add loading messages with delays for cyberpunk effect
+            const messages = [
+                'INITIALIZING NEURAL INTERFACE...',
+                'DECRYPTING PROJECT FILES...',
+                'ESTABLISHING SECURE CONNECTION...'
+            ];
+
+            let timer: NodeJS.Timeout;
+
+            // Simulate progress faster - increased speed
+            const interval = setInterval(() => {
+                setLoadingProgress(prev => {
+                    const newProgress = prev + (Math.random() * 25); // Increase by more each step
+                    return newProgress > 100 ? 100 : newProgress;
+                });
+            }, 80); // Reduced from 150ms
+
+            // Add loading messages sequentially but faster
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    setLoadingMessages(prev => [...prev, message]);
+                    // Play a sound for each message
+                    if (index === 0) playNeuralSound('synapse');
+                    else playNeuralSound('click');
+                }, 300 + index * 300); // Reduced from 500 + index * 700
+            });
+
+            // Complete loading much faster
+            // eslint-disable-next-line prefer-const
+            timer = setTimeout(() => {
+                clearInterval(interval);
+                setLoadingProgress(100);
+                setIsLoading(false);
+                playNeuralSound('success');
+
+                // Reduced delay before showing content
+                setTimeout(() => {
+                    setShowContent(true);
+                }, 150); // Reduced from 300ms
+            }, 800); // Reduced from 3500ms
+
             return () => {
-                clearTimeout(timer1);
-                clearTimeout(timer2);
+                clearTimeout(timer);
+                clearInterval(interval);
             };
         } else {
             setShowContent(false);
             setIsLoading(true);
         }
     }, [project]);
+
+    // Handle tab changes
+    const handleTabChange = (tab: 'overview' | 'tech' | 'code') => {
+        playNeuralSound('click');
+        setActiveTab(tab);
+    };
+
+    // Handle close with sound effect
+    const handleClose = () => {
+        playNeuralSound('click');
+        onClose();
+    };
+
+    // Format code with syntax highlighting
+    const formatCodeSnippet = (code: string) => {
+        return code; // In a real app, you'd add syntax highlighting here
+    };
 
     if (!project) return null;
 
@@ -37,9 +99,9 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                 <header className="project-detail-header">
                     <div className="project-title">
                         <h2>{project.title}</h2>
-                        <span className="project-id">ID: {project.id}</span>
+                        <span className="project-id">PROJECT ID: {project.id}</span>
                     </div>
-                    <button className="close-button" onClick={onClose}>
+                    <button className="close-button" onClick={handleClose}>
                         ×
                     </button>
                 </header>
@@ -47,16 +109,19 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                 {isLoading ? (
                     <div className="loading-container">
                         <div className="loading-bar">
-                            <div className="loading-progress"></div>
+                            <div
+                                className="loading-progress"
+                                style={{ width: `${loadingProgress}%` }}
+                            ></div>
                         </div>
                         <div className="loading-text">
                             <span>ACCESSING PROJECT DATA</span>
                             <span className="blink">_</span>
                         </div>
                         <div className="loading-details">
-                            <p>INITIALIZING NEURAL INTERFACE...</p>
-                            <p>DECRYPTING PROJECT FILES...</p>
-                            <p>ESTABLISHING SECURE CONNECTION...</p>
+                            {loadingMessages.map((message, index) => (
+                                <p key={index}>{message}</p>
+                            ))}
                         </div>
                     </div>
                 ) : (
@@ -64,19 +129,19 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                         <nav className="tab-navigation">
                             <button
                                 className={activeTab === 'overview' ? 'active' : ''}
-                                onClick={() => setActiveTab('overview')}
+                                onClick={() => handleTabChange('overview')}
                             >
                                 OVERVIEW
                             </button>
                             <button
                                 className={activeTab === 'tech' ? 'active' : ''}
-                                onClick={() => setActiveTab('tech')}
+                                onClick={() => handleTabChange('tech')}
                             >
                                 TECH STACK
                             </button>
                             <button
                                 className={activeTab === 'code' ? 'active' : ''}
-                                onClick={() => setActiveTab('code')}
+                                onClick={() => handleTabChange('code')}
                             >
                                 CODE ACCESS
                             </button>
@@ -89,7 +154,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                                             <img src={project.image} alt={project.title} className="project-image" />
                                         ) : (
                                             <div className="project-image-placeholder">
-                                                <span>[IMAGE DATA UNAVAILABLE]</span>
+                                                <span>[VISUAL DATA UNAVAILABLE]</span>
                                             </div>
                                         )}
                                         <div className="image-overlay"></div>
@@ -99,30 +164,40 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                                         <p>{project.description}</p>
                                         <div className="project-stats">
                                             <div className="stat">
-                                                <span className="stat-label">TYPE</span>
-                                                <span className="stat-value">{project.type}</span>
+                                                <span className="stat-label">CATEGORY</span>
+                                                <span className="stat-value">{project.type.toUpperCase()}</span>
                                             </div>
                                             <div className="stat">
                                                 <span className="stat-label">STATUS</span>
                                                 <span className="stat-value">{project.status || 'COMPLETED'}</span>
                                             </div>
+                                            {project.completionPercentage && (
+                                                <div className="stat">
+                                                    <span className="stat-label">COMPLETION</span>
+                                                    <span className="stat-value">{project.completionPercentage}%</span>
+                                                </div>
+                                            )}
                                         </div>
-                                        {project.demoLink && (
+                                        {(project.demoLink || project.githubLink) && (
                                             <div className="project-links">
-                                                <a
-                                                    href={project.demoLink}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="neon-button"
-                                                >
-                                                    LIVE DEMO
-                                                </a>
+                                                {project.demoLink && (
+                                                    <a
+                                                        href={project.demoLink}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="neon-button"
+                                                        onClick={() => playNeuralSound('click')}
+                                                    >
+                                                        LIVE DEMO
+                                                    </a>
+                                                )}
                                                 {project.githubLink && (
                                                     <a
                                                         href={project.githubLink}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="neon-button github"
+                                                        onClick={() => playNeuralSound('click')}
                                                     >
                                                         SOURCE CODE
                                                     </a>
@@ -153,18 +228,18 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                             )}
                             {activeTab === 'code' && (
                                 <div className="code-tab">
-                                    <h3>CODE FRAGMENTS</h3>
+                                    <h3>NEURAL CODE FRAGMENTS</h3>
                                     <div className="terminal">
                                         <div className="terminal-header">
-                                            <span>neural-terminal</span>
+                                            <span>neural-terminal ~ {project.id}</span>
                                         </div>
                                         <div className="terminal-content">
-                                            <p>Accessing code repository for {project.title}…</p>
-                                            <p>Authorization granted.</p>
-                                            <p>Displaying sample code fragment:</p>
+                                            <p>Accessing neural repository for {project.title}…</p>
+                                            <p>Authorization granted: Level EPSILON</p>
+                                            <p>Displaying neural code fragment:</p>
                                             <p className="blink">_</p>
                                             {project.codeSnippet ? (
-                                                <pre className="code-snippet">{project.codeSnippet}</pre>
+                                                <pre className="code-snippet">{formatCodeSnippet(project.codeSnippet)}</pre>
                                             ) : (
                                                 <p className="code-placeholder">
                                                     [CODE FRAGMENTS ENCRYPTED OR UNAVAILABLE]
@@ -178,8 +253,9 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="terminal-button"
+                                                        onClick={() => playNeuralSound('synapse')}
                                                     >
-                                                        YES, PROCEED TO GITHUB
+                                                        PROCEED TO GITHUB
                                                     </a>
                                                 </div>
                                             )}
