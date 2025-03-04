@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import './ProjectDetail.css';
 import { Project } from '../../types/Project';
@@ -29,7 +30,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
                 'ESTABLISHING SECURE CONNECTION...'
             ];
 
-            let timer: NodeJS.Timeout;
+            let timer: any;
 
             // Simulate progress faster - increased speed
             const interval = setInterval(() => {
