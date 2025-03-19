@@ -90,7 +90,6 @@ interface SimulationParams {
     pulseSpeed: number;
 }
 
-
 const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Project) => void }> = ({ projects, onNodeClick }) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -113,7 +112,13 @@ const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Proj
         pulseSpeed: 1.0,
     });
 
-    // NEW: Layout selection state
+    // Mouse interaction state
+    const [isMouseDown, setIsMouseDown] = useState(false);
+    const mouseDownDuration = useRef(0);
+    const interactionStartTime = useRef(0);
+    const pressedNodeRef = useRef<string | null>(null);
+
+    // Layout selection state
     const [layout, setLayout] = useState<'circular' | 'grid' | 'random' | 'hierarchical'>('circular');
 
     /**
@@ -596,6 +601,66 @@ const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Proj
             const deltaMult = Math.min(normalizedDelta, 2);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+            // Update mouse interaction hold effect
+            if (isMouseDown && pressedNodeRef.current) {
+                mouseDownDuration.current += deltaTime;
+                const interactionDuration = mouseDownDuration.current / 1000; // Convert to seconds
+                const pressedNode = nodes.find(node => node.id === pressedNodeRef.current);
+
+                if (pressedNode) {
+                    // Exponential growth with cap for longer presses
+                    const activationBoost = Math.min(0.8, 0.2 * Math.log(1 + interactionDuration));
+                    const newActivation = Math.min(1, pressedNode.activationLevel + activationBoost * 0.02 * deltaMult);
+
+                    // Update the specific node
+                    const updatedNodes = [...nodes];
+                    const nodeIndex = updatedNodes.findIndex(n => n.id === pressedNodeRef.current);
+                    if (nodeIndex >= 0) {
+                        updatedNodes[nodeIndex].activationLevel = newActivation;
+
+                        // Visual size increase with longer press
+                        const growthFactor = 1 + 0.3 * Math.min(1, interactionDuration / 3);
+                        updatedNodes[nodeIndex].radius = updatedNodes[nodeIndex].baseRadius * growthFactor;
+
+                        // Potentially create sparks for visual feedback
+                        if (interactionDuration > 1 && Math.random() < 0.05 * deltaMult * interactionDuration) {
+                            setSparks(prev => [...prev, createSpark(updatedNodes[nodeIndex])]);
+                        }
+
+                        // Propagate activity to connected nodes
+                        if (interactionDuration > 0.5 && newActivation > 0.5) {
+                            connections.forEach(connection => {
+                                if (connection.source.id === pressedNodeRef.current) {
+                                    const targetNodeIndex = updatedNodes.findIndex(n => n.id === connection.target.id);
+                                    if (targetNodeIndex >= 0) {
+                                        const propagatedActivation = 0.1 * newActivation * connection.strength * (1 - connection.isInhibitory ? 1 : -0.5);
+                                        updatedNodes[targetNodeIndex].activationLevel = Math.max(0, Math.min(1,
+                                            updatedNodes[targetNodeIndex].activationLevel + propagatedActivation * deltaMult
+                                        ));
+
+                                        // Trigger pulse along the connection
+                                        if (Math.random() < 0.1 * deltaMult * interactionDuration) {
+                                            const updatedConnections = [...connections];
+                                            const connIndex = updatedConnections.findIndex(
+                                                c => c.source.id === connection.source.id && c.target.id === connection.target.id
+                                            );
+                                            if (connIndex >= 0) {
+                                                updatedConnections[connIndex].pulseActive = true;
+                                                updatedConnections[connIndex].pulsePositions.push(0);
+                                                updatedConnections[connIndex].pulseSize = 1 + 0.5 * Math.min(1, interactionDuration / 2);
+                                                setConnections(updatedConnections);
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+
+                        setNodes(updatedNodes);
+                    }
+                }
+            }
+
             // Draw starfield background
             const updatedParticles = [...particles];
             updatedParticles.forEach(p => {
@@ -628,6 +693,7 @@ const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Proj
             if (updatedEvents.length !== networkEvents.length) {
                 setNetworkEvents(updatedEvents);
             }
+
 
             // Node repulsion: ensure nodes do not get too close
             for (let i = 0; i < nodes.length; i++) {
@@ -1325,64 +1391,80 @@ const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Proj
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
+
         const handleMouseMove = (e: MouseEvent) => {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             let found = false;
+
+            // Check if mouse is over any node
             for (const node of nodes) {
                 const dist = Math.sqrt((node.x - x) ** 2 + (node.y - y) ** 2);
                 const hitRadius = node.radius * 1.2 + 15;
+
                 if (dist <= hitRadius) {
                     setHoveredNode(node);
                     canvas.style.cursor = 'pointer';
                     found = true;
-                    if (node.activationLevel < 0.4) {
-                        const updatedNodes = [...nodes];
-                        const hovered = updatedNodes.find(n => n.id === node.id);
-                        if (hovered) {
-                            hovered.activationLevel = Math.min(0.6, hovered.activationLevel + 0.03);
-                            hovered.radius = hovered.baseRadius * 1.15;
-                            setNodes(updatedNodes);
-                        }
+
+                    // Always highlight the node on hover regardless of interface state
+                    const updatedNodes = [...nodes];
+                    const hovered = updatedNodes.find(n => n.id === node.id);
+                    if (hovered && hovered.activationLevel < 0.4) {
+                        hovered.activationLevel = Math.min(0.6, hovered.activationLevel + 0.03);
+                        hovered.radius = hovered.baseRadius * 1.15;
+                        setNodes(updatedNodes);
                     }
                     break;
                 }
             }
+
             if (!found) {
                 setHoveredNode(null);
                 canvas.style.cursor = 'default';
             }
         };
+
         const handleClick = (e: MouseEvent) => {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const MAX_REACH = 200;
             if (hoveredNode) {
+                // Always trigger project detail view on click regardless of interface state
                 onNodeClick(hoveredNode.project);
+
+                // Also update neural network activity for visual feedback
                 const updatedNodes = [...nodes];
                 const clickedNode = updatedNodes.find(n => n.id === hoveredNode.id);
                 if (clickedNode) {
                     clickedNode.activationLevel = 1.0;
                     clickedNode.lastPulseTime = Date.now();
                     clickedNode.lastActivationTime = Date.now();
+
+                    // Propagate activation to nearby nodes
                     updatedNodes.forEach(node => {
                         if (node.id !== clickedNode.id) {
                             const dx = node.x - clickedNode.x;
                             const dy = node.y - clickedNode.y;
                             const dist = Math.sqrt(dx * dx + dy * dy);
+                            const MAX_REACH = 200;
+
                             if (dist < MAX_REACH) {
                                 const influence = 0.5 * (1 - dist / MAX_REACH);
                                 node.activationLevel = Math.min(1, node.activationLevel + influence);
                             }
                         }
                     });
+
                     setNodes(updatedNodes);
+
+                    // Update connections for visual feedback
                     const outgoingConnections = connections.filter(c => c.source.id === clickedNode.id);
                     const updatedConnections = [...connections];
+
                     outgoingConnections.forEach(axon => {
-                        const connectionToUpdate = updatedConnections.find(c => c.source.id === axon.source.id && c.target.id === axon.target.id);
+                        const connectionToUpdate = updatedConnections.find(
+                            c => c.source.id === axon.source.id && c.target.id === axon.target.id
+                        );
+
                         if (connectionToUpdate) {
                             connectionToUpdate.pulseActive = true;
                             connectionToUpdate.pulsePositions = [0];
@@ -1390,38 +1472,20 @@ const NeuralNetwork: React.FC<{ projects: Project[]; onNodeClick: (project: Proj
                             connectionToUpdate.pulseSize = 1.5;
                         }
                     });
+
                     setConnections(updatedConnections);
                     triggerNetworkEvent('wave', { x: clickedNode.x, y: clickedNode.y }, 0.8);
                 }
-            } else {
-                const updatedNodes = [...nodes];
-                let anyActivated = false;
-                updatedNodes.forEach(node => {
-                    const dx = node.x - x;
-                    const dy = node.y - y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < MAX_REACH) {
-                        const influence = 0.3 * (1 - dist / MAX_REACH);
-                        node.activationLevel = Math.min(1, node.activationLevel + influence);
-                        anyActivated = true;
-                    }
-                });
-                if (anyActivated) {
-                    setNodes(updatedNodes);
-                    triggerNetworkEvent('wave', { x, y }, 0.5);
-                }
             }
         };
-        const handleDoubleClick = () => {
-            triggerNetworkEvent('burst', undefined, 1.0);
-        };
+
+        // Add event listeners
         canvas.addEventListener('mousemove', handleMouseMove);
         canvas.addEventListener('click', handleClick);
-        canvas.addEventListener('dblclick', handleDoubleClick);
+
         return () => {
             canvas.removeEventListener('mousemove', handleMouseMove);
             canvas.removeEventListener('click', handleClick);
-            canvas.removeEventListener('dblclick', handleDoubleClick);
         };
     }, [nodes, connections, hoveredNode, onNodeClick]);
 

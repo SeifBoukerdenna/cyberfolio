@@ -231,7 +231,11 @@ function App() {
           onProjectSelect={handleProjectSelect}
         />
         {neuralInterfaceActive && (
-          <NeuralInterface neuralActivityLevel={neuralActivityLevel} onActivityChange={handleNeuralActivityChange} />
+          <NeuralInterface
+            neuralActivityLevel={neuralActivityLevel}
+            onActivityChange={handleNeuralActivityChange}
+            style={{ pointerEvents: 'none' }} // Make the neural interface non-blocking
+          />
         )}
         <div className="status-panel">
           <div className="status-item">

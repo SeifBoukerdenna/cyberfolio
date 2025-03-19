@@ -1,3 +1,5 @@
+// Modifications for NeuralInterface.tsx to ensure it doesn't block node interactions
+
 import React, { useState, useEffect, useRef } from 'react';
 import './NeuralInterface.css';
 import { playNeuralSound } from '../neuralAudioManager/NeuralAudioManager';
@@ -5,12 +7,13 @@ import { playNeuralSound } from '../neuralAudioManager/NeuralAudioManager';
 interface NeuralInterfaceProps {
     neuralActivityLevel: number;
     onActivityChange?: (value: number) => void;
+    style?: React.CSSProperties; // Add style prop to accept custom styles
 }
-
 
 const NeuralInterface: React.FC<NeuralInterfaceProps> = ({
     neuralActivityLevel = 75,
-    onActivityChange
+    onActivityChange,
+    style // Accept custom styles from parent
 }) => {
     const [neuralSpikes, setNeuralSpikes] = useState<{ id: number, x: number, y: number, size: number }[]>([]);
     const [lastMousePosition, setLastMousePosition] = useState<{ x: number, y: number } | null>(null);
@@ -45,6 +48,10 @@ const NeuralInterface: React.FC<NeuralInterfaceProps> = ({
 
     // Handle interface click
     const handleInterfaceClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        // Only handle the click if it wasn't meant for a node underneath
+        // We'll check this in the actual implementation by stopping propagation
+        // in the node click handler
+
         const bounds = interfaceRef.current?.getBoundingClientRect();
         if (!bounds) return;
 
@@ -105,6 +112,11 @@ const NeuralInterface: React.FC<NeuralInterfaceProps> = ({
         setLastMousePosition({ x, y });
     };
 
+    // Combine built-in styles with any passed-in styles
+    const combinedStyles: React.CSSProperties = {
+        pointerEvents: 'none', // Critical change: always set to none
+        ...style
+    };
 
     return (
         <div
@@ -112,6 +124,7 @@ const NeuralInterface: React.FC<NeuralInterfaceProps> = ({
             ref={interfaceRef}
             onClick={handleInterfaceClick}
             onMouseMove={handleMouseMove}
+            style={combinedStyles}
         >
             {/* Horizontal scan effect */}
             <div
@@ -128,7 +141,8 @@ const NeuralInterface: React.FC<NeuralInterfaceProps> = ({
                         left: `${spike.x}px`,
                         top: `${spike.y}px`,
                         width: `${spike.size}px`,
-                        height: `${spike.size}px`
+                        height: `${spike.size}px`,
+                        pointerEvents: 'none' // Ensure spikes don't block click events
                     }}
                 ></div>
             ))}
